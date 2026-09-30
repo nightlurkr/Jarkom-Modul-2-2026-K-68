@@ -1,0 +1,144 @@
+root@alpha:~# ping 192.245.5.7 -c 3
+PING 192.245.5.7 (192.245.5.7) 56(84) bytes of data.
+64 bytes from 192.245.5.7: icmp_seq=1 ttl=63 time=2.43 ms
+64 bytes from 192.245.5.7: icmp_seq=2 ttl=63 time=0.632 ms
+64 bytes from 192.245.5.7: icmp_seq=3 ttl=63 time=1.25 ms
+
+--- 192.245.5.7 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 0.632/1.436/2.428/0.745 ms
+root@alpha:~# ping 192.245.3.2 -c 3
+PING 192.245.3.2 (192.245.3.2) 56(84) bytes of data.
+64 bytes from 192.245.3.2: icmp_seq=1 ttl=63 time=1.35 ms
+64 bytes from 192.245.3.2: icmp_seq=2 ttl=63 time=0.756 ms
+64 bytes from 192.245.3.2: icmp_seq=3 ttl=63 time=0.768 ms
+
+--- 192.245.3.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2039ms
+rtt min/avg/max/mdev = 0.756/0.958/1.350/0.277 ms
+root@alpha:~# cat > /root/dns.sh <<'EOF'
+echo "nameserver 192.245.5.2" > /etc/resolv.conf
+echo "nameserver 192.245.5.3" >> /etc/resolv.conf
+echo "nameserver 192.168.122.1" >> /etc/resolv.conf
+EOF
+bash /root/dns.sh
+root@alpha:~# apt-get install -y dnsutils
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Note, selecting 'bind9-dnsutils' instead of 'dnsutils'
+bind9-dnsutils is already the newest version (1:9.20.26-1~deb13u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+root@alpha:~# dig @192.245.5.2 K68.com
+
+; <<>> DiG 9.20.26-1~deb13u1-Debian <<>> @192.245.5.2 K68.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18573
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 90dfca89cbf94dea010000006abc3dada3f55bbdfe492dd4 (good)
+;; QUESTION SECTION:
+;K68.com.                       IN      A
+
+;; ANSWER SECTION:
+K68.com.                604800  IN      A       192.245.4.2
+
+;; Query time: 1 msec
+;; SERVER: 192.245.5.2#53(192.245.5.2) (UDP)
+;; WHEN: Tue Sep 29 22:37:33 UTC 2026
+;; MSG SIZE  rcvd: 80
+
+root@alpha:~# dig @192.245.5.3 K68.com
+
+; <<>> DiG 9.20.26-1~deb13u1-Debian <<>> @192.245.5.3 K68.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33554
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: ff929622cef9950e010000006abc3db378b1b7a59cfb2cfa (good)
+;; QUESTION SECTION:
+;K68.com.                       IN      A
+
+;; ANSWER SECTION:
+K68.com.                604800  IN      A       192.245.4.2
+
+;; Query time: 0 msec
+;; SERVER: 192.245.5.3#53(192.245.5.3) (UDP)
+;; WHEN: Tue Sep 29 22:37:39 UTC 2026
+;; MSG SIZE  rcvd: 80
+
+root@alpha:~# dig K68.com
+
+; <<>> DiG 9.20.26-1~deb13u1-Debian <<>> K68.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 63117
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: d689a64d24b413f9010000006abc3dd7744aee16a9afce61 (good)
+;; QUESTION SECTION:
+;K68.com.                       IN      A
+
+;; ANSWER SECTION:
+K68.com.                604800  IN      A       192.245.4.2
+
+;; Query time: 1 msec
+;; SERVER: 192.245.5.2#53(192.245.5.2) (UDP)
+;; WHEN: Tue Sep 29 22:38:15 UTC 2026
+;; MSG SIZE  rcvd: 80
+
+root@alpha:~# dig prab.K68.com
+
+; <<>> DiG 9.20.26-1~deb13u1-Debian <<>> prab.K68.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21629
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 68f5d30d0a31916a010000006abc3ddfb035f802a765c305 (good)
+;; QUESTION SECTION:
+;prab.K68.com.                  IN      A
+
+;; ANSWER SECTION:
+prab.K68.com.           604800  IN      A       192.245.5.2
+
+;; Query time: 1 msec
+;; SERVER: 192.245.5.2#53(192.245.5.2) (UDP)
+;; WHEN: Tue Sep 29 22:38:23 UTC 2026
+;; MSG SIZE  rcvd: 85
+
+root@alpha:~# dig tedd.K68.com
+
+; <<>> DiG 9.20.26-1~deb13u1-Debian <<>> tedd.K68.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 2751
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 4ffeeb539f76abf6010000006abc3de222738e1e3468406d (good)
+;; QUESTION SECTION:
+;tedd.K68.com.                  IN      A
+
+;; ANSWER SECTION:
+tedd.K68.com.           604800  IN      A       192.245.5.3
+
+;; Query time: 1 msec
+;; SERVER: 192.245.5.2#53(192.245.5.2) (UDP)
+;; WHEN: Tue Sep 29 22:38:26 UTC 2026
+;; MSG SIZE  rcvd: 85
+
+root@alpha:~#
