@@ -36,10 +36,10 @@ Laporan ini mencakup **soal 1 sampai 15**.
 - [Soal 9 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
 - [Soal 10 — Web Dinamis dan Rewrite URL](#soal-10--Web-Dinamis-dan-Rewrite-URL)
 - [Soal 11 — Reverse Proxy dan Load Balancer](#soal-11--Reverse-Proxy-dan-Load-Balancer)
-- [Soal 12 — Basic Authentication (Penny)](#soal-12--Basic-Authentication-(Penny))
-- [Soal 13 — Redirection (Penny & Abbey)](#soal-13--Redirection-(Penny-&-Abbey))
+- [Soal 12 — Basic Authentication](#soal-12--Basic-Authentication)
+- [Soal 13 — Redirection](#soal-13--Redirection)
 - [Soal 14 — Forwarding Real IP ke Access Log Backend](#soal-14--Forwarding-Real-IP-ke-Access-Log-Backend)
-- [Soal 15 — Jalur Proxy Khusus (Standalone)](#soal-15--Jalur-Proxy-Khusus-(Standalone))
+- [Soal 15 — Jalur Proxy Khusus](#soal-15--Jalur-Proxy-Khusus)
 - [Struktur Repository](#struktur-repository)
 
 ---
@@ -704,7 +704,7 @@ service nginx restart
 
 ---
 
-## Soal 12 — Basic Authentication (Penny)
+## Soal 12 — Basic Authentication
 
 > Terdapat ruang khusus di penny yang yang menyimpan dokumen rahasia sindikat, oleh karena itu terapkan perlindungan basic authentication untuk path `/admin`. Akses ke jalur tersebut harus menolak pengunjung tanpa kredensial, dan hanya mengizinkan masuk jika menggunakan credential berikut:
 > - Username: `prabs`
@@ -744,7 +744,7 @@ Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau le
 
 ---
 
-## Soal 13 — Redirection (Penny & Abbey)
+## Soal 13 — Redirection
 
 > Setiap entitas dari luar harus memanggil gerbang dengan nama kanoniknya. Jika ada yang mencoba mengakses IP penny dan domain `penny.K68.com`, paksa sistem untuk melakukan redirect secara permanen (status code 301) menuju `www.K68.com`. Sebaliknya, jika ada yang mengakses IP abbey dan domain `abbey.K68.com`, lakukan redirect sementara (status code 302) menuju `static.K68.com`.
 
@@ -827,7 +827,7 @@ Setelah di-restart, baik Apache maupun Nginx akan mencatat IP yang ada di header
 
 ---
 
-## Soal 15 — Jalur Proxy Khusus (Standalone)
+## Soal 15 — Jalur Proxy Khusus
 
 > Rootkit menginstruksikan pembuatan jalur proxy khusus yang berdiri sendiri. Pada penny buat reverse proxy untuk path `/eternal` yang menyajikan directory `/var/www/eternal`, dan pastikan path ini dapat mengeksekusi (rendering) file `php`. Pada abbey, buat jalur `/orion` yang menyajikan directory `/var/www/orion`, secara murni statis tanpa perlu rendering php.
 
