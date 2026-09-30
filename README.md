@@ -602,7 +602,7 @@ service nginx restart
 
 ### Pengujian
 
-![Soal 10](screenshot/Soal_10_Bukti_Oblada.png)
+![Soal 10](screenshot/Soal 10 Bukti Oblada.png)
 ![Soal 10](screenshot/Soal_10_Bukti_Molly.png)
 
 ---
