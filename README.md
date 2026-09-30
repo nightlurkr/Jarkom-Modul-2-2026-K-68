@@ -602,8 +602,8 @@ service nginx restart
 
 ### Pengujian
 
-![Soal 10](screenshot/Soal 10 Bukti Oblada.png)
-![Soal 10](screenshot/Soal_10_Bukti_Molly.png)
+![Soal 10](screenshot/Soal%2010%20Bukti%20Oblada.png)
+![Soal 10](screenshot/Soal%2010%20Bukti%20Molly.png)
 
 ---
 
@@ -692,9 +692,9 @@ service nginx restart
 
 ### Pengujian
 
-![Soal 11 Penny](screenshot/Soal_11_Vault_Penny.png)
+![Soal 11 Penny](screenshot/Soal%2011%20Vault%20Penny.png)
 
-![Soal 11 Abbey](screenshot/soal_11_Abbey.png)
+![Soal 11 Abbey](screenshot/soal%2011%20Abbey.png)
 
 ---
 
@@ -733,8 +733,8 @@ Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau le
 
 ### Pengujian
 
-![Soal 12 Failed](screenshot/Soal_12_Failed.png)
-![Soal 12 Success](screenshot/Soal_12_Success.png)
+![Soal 12 Failed](screenshot/Soal%2012%20Failed.png)
+![Soal 12 Success](screenshot/Soal%2012%20Success.png)
 
 ---
 
@@ -770,9 +770,9 @@ Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
 
 ### Pengujian
 
-![Soal 13 Penny](screenshot/Soal_13_Penny.png)
+![Soal 13 Penny](screenshot/Soal%2013%20Penny.png)
 
-![Soal 13 Abbey](screenshot/soal_13_Abbey.png)
+![Soal 13 Abbey](screenshot/soal%2013%20Abbey.png)
 
 ---
 
@@ -815,9 +815,9 @@ Setelah di-restart, baik Apache maupun Nginx akan mencatat IP yang ada di header
 
 ### Pengujian
 
-![Soal 14 Alpha Echo](screenshot/Soal_14_Alpha_Echo.png)
+![Soal 14 Alpha Echo](screenshot/Soal%2014%20Alpha%20Echo.png)
 
-![Soal 14 Alpha Hasil](screenshot/soal_14_Alpha.png)
+![Soal 14 Alpha Hasil](screenshot/soal%2014%20Alpha.png)
 
 ---
 
@@ -857,9 +857,9 @@ Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka
 
 ### Pengujian
 
-![Soal 13 Penny](screenshot/Soal_13_Penny.png)
+![Soal 15 Penny](screenshot/Soal%2015%20Penny.png)
 
-![Soal 13 Abbey](screenshot/soal_13_Abbey.png)
+![Soal 15 Abbey](screenshot/soal%2015%20Abbey.png)
 
 ---
 
