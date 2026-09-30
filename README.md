@@ -35,11 +35,11 @@ Laporan ini mencakup **soal 1 sampai 15**.
 - [Soal 8 — Reverse Zone dan PTR](#soal-8--reverse-zone-dan-ptr)
 - [Soal 9 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
 - [Soal 10 — Web Dinamis dan Rewrite URL](#soal-10--Web-Dinamis-dan-Rewrite-URL)
-- [Soal 11 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
-- [Soal 12 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
-- [Soal 13 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
-- [Soal 14 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
-- [Soal 15 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
+- [Soal 11 — Reverse Proxy dan Load Balancer](#soal-11--Reverse-Proxy-dan-Load-Balancer)
+- [Soal 12 — Basic Authentication (Penny)](#soal-12--Basic-Authentication-(Penny))
+- [Soal 13 — Redirection (Penny & Abbey)](#soal-13--Redirection-(Penny-&-Abbey))
+- [Soal 14 — Forwarding Real IP ke Access Log Backend](#soal-14--Forwarding-Real-IP-ke-Access-Log-Backend)
+- [Soal 15 — Jalur Proxy Khusus (Standalone)](#soal-15--Jalur-Proxy-Khusus-(Standalone))
 - [Struktur Repository](#struktur-repository)
 
 ---
