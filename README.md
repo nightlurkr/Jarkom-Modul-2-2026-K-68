@@ -602,14 +602,8 @@ service nginx restart
 
 ### Pengujian
 
-![Soal 10](screenshot/soal10-curl-profil.png)
-
-| Uji | Hasil |
-|---|---|
-| `curl -i http://localhost/profil` di oblada | HTTP 200 OK, halaman profil ter-render dinamis tanpa ekstensi `.php` |
-| `curl -i http://oblada.K68.com/profil` | Berhasil diakses via hostname, waktu server tercetak dinamis |
-| `curl -i http://molly.K68.com/profil` | Berhasil diakses via hostname, mengembalikan identitas molly |
-| `curl -s http://core.K68.com/` | Berhasil diakses via domain virtual host area core |
+![Soal 10](screenshot/Soal_10_Bukti_Oblada.png)
+![Soal 10](screenshot/Soal_10_Bukti_Molly.png)
 
 ---
 
@@ -698,55 +692,9 @@ service nginx restart
 
 ### Pengujian
 
-![Soal 11 Penny](screenshot/soal11-penny-vault.png)
+![Soal 11 Penny](screenshot/Soal_11_Vault_Penny.png)
 
-![Soal 11 Abbey](screenshot/soal11-abbey-core.png)
-
-| Uji | Hasil |
-|---|---|
-| `curl -i http://localhost/` di penny | HTTP 200 OK, permintaan diteruskan ke backend area vault (desmond / obladi) |
-| `curl -s http://localhost/` berulang di penny | Beban terdistribusi bergantian antara obladi dan desmond |
-| `curl -i http://localhost/profil` di abbey | HTTP 200 OK, permintaan diteruskan ke backend area core (molly / oblada) |
-| `curl -s http://localhost/profil` berulang di abbey | Beban terdistribusi bergantian antara molly dan oblada |
-
----
-
-## Struktur Repository
-
-```
-.
-├── README.md
-├── config/
-│   ├── dns.sh                    # resolver + /etc/hosts, identik di 13 node non-router
-│   ├── interfaces/               # /etc/network/interfaces seluruh node
-│   ├── rootkit/
-│   │   ├── interfaces
-│   │   ├── nat.sh                # ip_forward + MASQUERADE
-│   │   └── hostname.sh           # FQDN rootkit di /etc/hosts
-│   ├── prab/setup-dns.sh         # BIND master: zona forward + 3 reverse
-│   ├── tedd/setup-dns.sh         # BIND slave
-│   ├── web/setup-web.sh          # Apache, identik di obladi dan desmond
-│   ├── core/setup-core.sh        # Nginx + PHP-FPM, identik di oblada dan molly
-│   └── proxy/
-│       ├── setup-penny.sh        # Apache reverse proxy & load balancer area vault
-│       └── setup-abbey.sh        # Nginx reverse proxy & load balancer area core
-└── screenshot/                   # bukti pengerjaan soal 1-11
-```
-
-### Letak script di dalam node
-
-| Script | Node | Path | Dipanggil dari |
-|---|---|---|---|
-| `nat.sh` | rootkit | `/root/nat.sh` | `up` di `interfaces` |
-| `hostname.sh` | rootkit | `/root/hostname.sh` | `up` di `interfaces` |
-| `dns.sh` | 13 node non-router | `/root/dns.sh` | `up` di `interfaces` |
-| `setup-dns.sh` | prab, tedd | `/root/setup-dns.sh` | manual |
-| `setup-web.sh` | obladi, desmond | `/root/setup-web.sh` | manual |
-| `setup-core.sh` | oblada, molly | `/root/setup-core.sh` | manual |
-| `setup-penny.sh` | penny | `/root/setup-penny.sh` | manual |
-| `setup-abbey.sh` | abbey | `/root/setup-abbey.sh` | manual |
-
-`setup-dns.sh`, `setup-web.sh`, `setup-core.sh`, `setup-penny.sh`, dan `setup-abbey.sh` belum dipasang pemanggilan otomatisnya karena persistensi service setelah restart merupakan lingkup soal 20.
+![Soal 11 Abbey](screenshot/soal_11_Abbey.png)
 
 ---
 
@@ -782,6 +730,12 @@ Perlindungan Basic Authentication diterapkan pada node **Penny** menggunakan uti
 
 Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau lewat IP-nya akan dihadapkan pada prompt *Basic Auth*.
 
+
+### Pengujian
+
+![Soal 12 Failed](screenshot/Soal_12_Failed.png)
+![Soal 12 Success](screenshot/Soal_12_Success.png)
+
 ---
 
 ## Soal 13 — Redirection (Penny & Abbey)
@@ -811,6 +765,14 @@ Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
         return 302 http://static.K68.com$request_uri;
     }
     ```
+
+---
+
+### Pengujian
+
+![Soal 13 Penny](screenshot/Soal_13_Penny.png)
+
+![Soal 13 Abbey](screenshot/soal_13_Abbey.png)
 
 ---
 
@@ -851,6 +813,14 @@ Setelah di-restart, baik Apache maupun Nginx akan mencatat IP yang ada di header
 
 ---
 
+### Pengujian
+
+![Soal 14 Alpha Echo](screenshot/Soal_14_Alpha_Echo.png)
+
+![Soal 14 Alpha Hasil](screenshot/soal_14_Alpha.png)
+
+---
+
 ## Soal 15 — Jalur Proxy Khusus (Standalone)
 
 > Rootkit menginstruksikan pembuatan jalur proxy khusus yang berdiri sendiri. Pada penny buat reverse proxy untuk path `/eternal` yang menyajikan directory `/var/www/eternal`, dan pastikan path ini dapat mengeksekusi (rendering) file `php`. Pada abbey, buat jalur `/orion` yang menyajikan directory `/var/www/orion`, secara murni statis tanpa perlu rendering php.
@@ -883,6 +853,15 @@ Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka
       ```
       Tanpa instalasi modul PHP, Nginx melayani `/orion` secara murni statis.
 
+---
+
+### Pengujian
+
+![Soal 13 Penny](screenshot/Soal_13_Penny.png)
+
+![Soal 13 Abbey](screenshot/soal_13_Abbey.png)
+
+---
 
 ## Struktur Repository
 
