@@ -505,6 +505,385 @@ Daftar berkas tampil sebagai tautan yang dapat dibuka, dan footer Apache menunju
 
 ---
 
+## Soal 10 — Web Dinamis dan Rewrite URL
+
+> Jalankan layanan web dinamis (PHP-FPM) pada hostname di node core (menggunakan nginx). Buat sebuah aplikasi sederhana yang memuat halaman beranda dan halaman profil. Terapkan aturan rewrite pada server sehingga akses ke /profil dapat berfungsi dengan URL bersih (tanpa akhiran .php). Akses pengujian wajib dilakukan melalui hostname.
+
+### Pengerjaan
+
+Area core terdiri dari sepasang node repositori web dinamis: **oblada** (`192.245.5.6`) dan **molly** (`192.245.5.7`). Keduanya dikonfigurasi menggunakan **Nginx** dan **PHP 8.4-FPM** sesuai anjuran glosarium.
+
+Aplikasi sederhana dibuat dengan dua halaman:
+1. `/var/www/<node>/index.php`: Halaman beranda yang menampilkan nama node dan status layanan.
+2. `/var/www/<node>/profil.php`: Halaman profil yang menampilkan FQDN hostname dan waktu server dinamis melalui fungsi `date()`.
+
+Kunci dari URL bersih (Clean URL) terletak pada direktif `try_files` di dalam blok `location /`:
+
+```nginx
+location / {
+    try_files $uri $uri/ $uri.php?$args;
+}
+```
+
+Ketika klien meminta `/profil`, Nginx terlebih dahulu memeriksa apakah ada berkas `/profil` atau direktori `/profil/`. Karena tidak ada, Nginx mencoba mencari `$uri.php` (`/profil.php`). Berkas tersebut ditemukan dan langsung dialihkan ke blok FastCGI PHP 8.4-FPM tanpa memerlukan ekstensi `.php` pada URL peramban.
+
+Seluruh konfigurasi dibungkus dalam script di `/root/setup-core.sh` yang bersifat generik dengan membaca `$(hostname -s)`, sehingga isi script identik di oblada maupun molly.
+
+**oblada dan molly** — [`config/core/setup-core.sh`](config/core/setup-core.sh)
+
+```bash
+#!/bin/bash
+
+NODE_NAME=$(hostname -s)
+WEB_ROOT="/var/www/$NODE_NAME"
+
+mkdir -p "$WEB_ROOT"
+
+cat > "$WEB_ROOT/index.php" << 'EOF'
+<!DOCTYPE html>
+<html>
+<head><title>Beranda Core</title></head>
+<body>
+    <h1>Selamat Datang di Area Core</h1>
+    <p>Node: <?php echo gethostname(); ?></p>
+    <p>Status: Web Dinamis PHP 8.4-FPM Aktif</p>
+    <p><a href="/profil">Ke Halaman Profil (Clean URL)</a></p>
+</body>
+</html>
+EOF
+
+cat > "$WEB_ROOT/profil.php" << 'EOF'
+<!DOCTYPE html>
+<html>
+<head><title>Profil Node Core</title></head>
+<body>
+    <h1>Halaman Profil Entitas</h1>
+    <p>Identitas Hostname: <strong><?php echo gethostname(); ?>.K68.com</strong></p>
+    <p>Waktu Server: <?php echo date('Y-m-d H:i:s'); ?></p>
+    <p><a href="/">Kembali ke Beranda</a></p>
+</body>
+</html>
+EOF
+
+chown -R www-data:www-data "$WEB_ROOT"
+chmod -R 755 "$WEB_ROOT"
+
+service php8.4-fpm start
+
+cat > /etc/nginx/sites-available/core << EOF
+server {
+    listen 80;
+    server_name ${NODE_NAME}.K68.com ${NODE_NAME}.k68.com core.K68.com core.k68.com;
+
+    root $WEB_ROOT;
+    index index.php index.html;
+
+    location / {
+        try_files \$uri \$uri/ \$uri.php?\$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+EOF
+
+ln -sf /etc/nginx/sites-available/core /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+
+service php8.4-fpm restart
+service nginx restart
+```
+
+### Pengujian
+
+![Soal 10](screenshot/soal10-curl-profil.png)
+
+| Uji | Hasil |
+|---|---|
+| `curl -i http://localhost/profil` di oblada | HTTP 200 OK, halaman profil ter-render dinamis tanpa ekstensi `.php` |
+| `curl -i http://oblada.K68.com/profil` | Berhasil diakses via hostname, waktu server tercetak dinamis |
+| `curl -i http://molly.K68.com/profil` | Berhasil diakses via hostname, mengembalikan identitas molly |
+| `curl -s http://core.K68.com/` | Berhasil diakses via domain virtual host area core |
+
+---
+
+## Soal 11 — Reverse Proxy dan Load Balancer
+
+> Konfigurasikan Penny (menggunakan Apache) sebagai reverse proxy yang mengarah ke semua node di area vault (Obladi & Desmond). Sementara itu, konfigurasikan Abbey (menggunakan Nginx) sebagai reverse proxy menuju area core (Oblada & Molly). Pastikan kedua gerbang ini meneruskan identitas asli pengunjung ke server backend dengan melakukan forwarding header Host dan X-Real-IP. Buktikan bahwa Penny dan Abbey berhasil mendistribusikan lalu lintas dengan tepat.
+
+### Pengerjaan
+
+Dua gerbang penyaring dikonfigurasi sebagai reverse proxy dan load balancer menggunakan dua teknologi web server berbeda:
+
+1. **Penny (`192.245.4.2`) — Apache Reverse Proxy:**
+   Menggunakan modul Apache: `proxy`, `proxy_http`, `proxy_balancer`, `lbmethod_byrequests`, dan `headers`.
+   - Mengelompokkan backend area vault (`http://192.245.5.4:80` dan `http://192.245.5.5:80`) ke dalam satu cluster load balancer dengan metode `byrequests` (round-robin).
+   - Meneruskan header identitas asli pengunjung dengan `ProxyPreserveHost On` (header `Host`) dan `RequestHeader set X-Real-IP %{REMOTE_ADDR}s` (header `X-Real-IP`).
+
+2. **Abbey (`192.245.3.2`) — Nginx Reverse Proxy:**
+   Menggunakan blok `upstream core_backend` yang mengarah ke `192.245.5.6:80` (oblada) dan `192.245.5.7:80` (molly).
+   - Nginx mendistribusikan beban secara default menggunakan round-robin.
+   - Meneruskan identitas pengunjung melalui:
+     ```nginx
+     proxy_set_header Host $host;
+     proxy_set_header X-Real-IP $remote_addr;
+     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     ```
+
+**Penny** — [`config/proxy/setup-penny.sh`](config/proxy/setup-penny.sh)
+
+```bash
+#!/bin/bash
+
+a2enmod proxy proxy_http proxy_balancer lbmethod_byrequests headers
+
+cat > /etc/apache2/sites-available/penny-proxy.conf << 'EOF'
+<VirtualHost *:80>
+    ServerName penny.K68.com
+    ServerAlias www.K68.com
+
+    ProxyPreserveHost On
+    RequestHeader set X-Real-IP %{REMOTE_ADDR}s
+
+    <Proxy balancer://vaultcluster>
+        BalancerMember http://192.245.5.4:80
+        BalancerMember http://192.245.5.5:80
+        ProxySet lbmethod=byrequests
+    </Proxy>
+
+    ProxyPass / balancer://vaultcluster/
+    ProxyPassReverse / balancer://vaultcluster/
+</VirtualHost>
+EOF
+
+a2ensite penny-proxy.conf
+a2dissite 000-default.conf
+service apache2 restart
+```
+
+**Abbey** — [`config/proxy/setup-abbey.sh`](config/proxy/setup-abbey.sh)
+
+```bash
+#!/bin/bash
+
+cat > /etc/nginx/sites-available/abbey-proxy << 'EOF'
+upstream core_backend {
+    server 192.245.5.6:80;
+    server 192.245.5.7:80;
+}
+
+server {
+    listen 80;
+    server_name abbey.K68.com static.K68.com;
+
+    location / {
+        proxy_pass http://core_backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+EOF
+
+ln -sf /etc/nginx/sites-available/abbey-proxy /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+service nginx restart
+```
+
+### Pengujian
+
+![Soal 11 Penny](screenshot/soal11-penny-vault.png)
+
+![Soal 11 Abbey](screenshot/soal11-abbey-core.png)
+
+| Uji | Hasil |
+|---|---|
+| `curl -i http://localhost/` di penny | HTTP 200 OK, permintaan diteruskan ke backend area vault (desmond / obladi) |
+| `curl -s http://localhost/` berulang di penny | Beban terdistribusi bergantian antara obladi dan desmond |
+| `curl -i http://localhost/profil` di abbey | HTTP 200 OK, permintaan diteruskan ke backend area core (molly / oblada) |
+| `curl -s http://localhost/profil` berulang di abbey | Beban terdistribusi bergantian antara molly dan oblada |
+
+---
+
+## Struktur Repository
+
+```
+.
+├── README.md
+├── config/
+│   ├── dns.sh                    # resolver + /etc/hosts, identik di 13 node non-router
+│   ├── interfaces/               # /etc/network/interfaces seluruh node
+│   ├── rootkit/
+│   │   ├── interfaces
+│   │   ├── nat.sh                # ip_forward + MASQUERADE
+│   │   └── hostname.sh           # FQDN rootkit di /etc/hosts
+│   ├── prab/setup-dns.sh         # BIND master: zona forward + 3 reverse
+│   ├── tedd/setup-dns.sh         # BIND slave
+│   ├── web/setup-web.sh          # Apache, identik di obladi dan desmond
+│   ├── core/setup-core.sh        # Nginx + PHP-FPM, identik di oblada dan molly
+│   └── proxy/
+│       ├── setup-penny.sh        # Apache reverse proxy & load balancer area vault
+│       └── setup-abbey.sh        # Nginx reverse proxy & load balancer area core
+└── screenshot/                   # bukti pengerjaan soal 1-11
+```
+
+### Letak script di dalam node
+
+| Script | Node | Path | Dipanggil dari |
+|---|---|---|---|
+| `nat.sh` | rootkit | `/root/nat.sh` | `up` di `interfaces` |
+| `hostname.sh` | rootkit | `/root/hostname.sh` | `up` di `interfaces` |
+| `dns.sh` | 13 node non-router | `/root/dns.sh` | `up` di `interfaces` |
+| `setup-dns.sh` | prab, tedd | `/root/setup-dns.sh` | manual |
+| `setup-web.sh` | obladi, desmond | `/root/setup-web.sh` | manual |
+| `setup-core.sh` | oblada, molly | `/root/setup-core.sh` | manual |
+| `setup-penny.sh` | penny | `/root/setup-penny.sh` | manual |
+| `setup-abbey.sh` | abbey | `/root/setup-abbey.sh` | manual |
+
+`setup-dns.sh`, `setup-web.sh`, `setup-core.sh`, `setup-penny.sh`, dan `setup-abbey.sh` belum dipasang pemanggilan otomatisnya karena persistensi service setelah restart merupakan lingkup soal 20.
+
+---
+
+## Soal 12 — Basic Authentication (Penny)
+
+> Terdapat ruang khusus di penny yang yang menyimpan dokumen rahasia sindikat, oleh karena itu terapkan perlindungan basic authentication untuk path `/admin`. Akses ke jalur tersebut harus menolak pengunjung tanpa kredensial, dan hanya mengizinkan masuk jika menggunakan credential berikut:
+> - Username: `prabs`
+> - Password: `pakar_pinter_jadi_gob***`
+
+### Pengerjaan
+
+Perlindungan Basic Authentication diterapkan pada node **Penny** menggunakan utilitas dari Apache (`apache2-utils` / `htpasswd`). Berikut langkah yang dilakukan di dalam `setup-penny.sh`:
+
+1.  **Instalasi & Modul:** Menginstal paket `apache2-utils` dan mengaktifkan modul `auth_basic` serta `authn_file`.
+2.  **Pembuatan Kredensial:** Membuat file kredensial di `/etc/apache2/.htpasswd` dengan menjalankan perintah:
+    ```bash
+    htpasswd -bc /etc/apache2/.htpasswd prabs "pakar_pinter_jadi_gob***"
+    ```
+3.  **Membuat Direktori Lokal:** Membuat direktori `/var/www/html/admin` agar ada konten yang ditampilkan ketika `/admin` diakses dengan benar.
+4.  **Konfigurasi VirtualHost:**
+    Karena Penny adalah reverse proxy, secara *default* path `/` diteruskan ke *backend*. Agar `/admin` tidak ikut diteruskan dan bisa dilayani secara lokal dengan autentikasi, ditambahkan aturan pengecualian sebelum `ProxyPass /`:
+    ```apache
+    ProxyPass /admin !
+    Alias /admin /var/www/html/admin
+
+    <Directory /var/www/html/admin>
+        AuthType Basic
+        AuthName "Restricted Area"
+        AuthUserFile /etc/apache2/.htpasswd
+        Require valid-user
+    </Directory>
+    ```
+
+Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau lewat IP-nya akan dihadapkan pada prompt *Basic Auth*.
+
+---
+
+## Soal 13 — Redirection (Penny & Abbey)
+
+> Setiap entitas dari luar harus memanggil gerbang dengan nama kanoniknya. Jika ada yang mencoba mengakses IP penny dan domain `penny.K68.com`, paksa sistem untuk melakukan redirect secara permanen (status code 301) menuju `www.K68.com`. Sebaliknya, jika ada yang mengakses IP abbey dan domain `abbey.K68.com`, lakukan redirect sementara (status code 302) menuju `static.K68.com`.
+
+### Pengerjaan
+
+Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
+
+1.  **Penny (Apache) — Redirect 301 (Permanent):**
+    Di dalam `setup-penny.sh`, diaktifkan modul `rewrite`. Konfigurasi VirtualHost ditambahkan aturan `RewriteCond` dan `RewriteRule` untuk mendeteksi akses ke IP `192.245.4.2` atau domain `penny.K68.com`, lalu mengalihkannya ke `www.K68.com`.
+    ```apache
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^penny\.K68\.com$ [NC,OR]
+    RewriteCond %{HTTP_HOST} ^192\.245\.4\.2$
+    RewriteRule ^(.*)$ http://www.K68.com$1 [R=301,L]
+    ```
+
+2.  **Abbey (Nginx) — Redirect 302 (Temporary):**
+    Di dalam `setup-abbey.sh`, pada blok `server`, ditambahkan kondisi `if` untuk memeriksa variabel `$host`. Jika *host* yang diminta adalah IP `192.245.3.2` atau domain `abbey.K68.com`, *request* langsung dikembalikan dengan status `302` menuju `static.K68.com` beserta URI aslinya.
+    ```nginx
+    if ($host = "abbey.K68.com") {
+        return 302 http://static.K68.com$request_uri;
+    }
+    if ($host = "192.245.3.2") {
+        return 302 http://static.K68.com$request_uri;
+    }
+    ```
+
+---
+
+## Soal 14 — Forwarding Real IP ke Access Log Backend
+
+> Di dalam The Mesh, rekam jejak tidak boleh dipalsukan oleh sistem. Pastikan access log pada setiap server web di area vault maupun area core mencatat alamat IP asli milik client (pengunjung) yang diteruskan oleh gerbang, dan bukan mencatat IP dari Penny ataupun Abbey.
+
+### Pengerjaan
+
+Secara bawaan, karena *request* dialirkan melalui *reverse proxy*, server *backend* akan mencatat IP milik *proxy* tersebut sebagai pengunjungnya. Karena Penny dan Abbey sudah diinstruksikan untuk meneruskan *header* IP asli klien (via `X-Real-IP`), server *backend* harus dikonfigurasi untuk membaca *header* tersebut dan mengganti *client IP* bawaannya dengan IP tersebut untuk keperluan *logging*.
+
+1.  **Area Vault (obladi & desmond) — Apache:**
+    Pada node Apache di area vault, modul `remoteip` diaktifkan untuk menerjemahkan alamat klien secara otomatis berdasarkan header yang diteruskan oleh Penny (`192.245.4.2`).
+    
+    Perintah yang ditambahkan di `setup-web.sh`:
+    ```bash
+    a2enmod remoteip
+    cat > /etc/apache2/conf-available/remoteip.conf << 'EOF'
+    RemoteIPHeader X-Real-IP
+    RemoteIPInternalProxy 192.245.4.2
+    EOF
+    a2enconf remoteip
+
+    # Mengubah format log bawaan Apache agar memakai variabel %a (client IP aktual)
+    sed -i 's/LogFormat "%h /LogFormat "%a /g' /etc/apache2/apache2.conf
+    ```
+
+2.  **Area Core (oblada & molly) — Nginx:**
+    Nginx menggunakan modul *Real IP* (secara otomatis sudah ada di *build* bawaan Nginx) untuk membaca IP pengunjung yang diteruskan oleh Abbey (`192.245.3.2`).
+    
+    Baris berikut disematkan di dalam blok `server` pada konfigurasi Nginx di `setup-core.sh`:
+    ```nginx
+    set_real_ip_from 192.245.3.2;
+    real_ip_header X-Real-IP;
+    ```
+
+Setelah di-restart, baik Apache maupun Nginx akan mencatat IP yang ada di header `X-Real-IP` (misal dari node alpha atau rootkit) ke dalam file *access log* (misal `/var/log/apache2/access.log` atau `/var/log/nginx/access.log`), mengabaikan IP Penny/Abbey sebagai alamat koneksi TCP.
+
+---
+
+## Soal 15 — Jalur Proxy Khusus (Standalone)
+
+> Rootkit menginstruksikan pembuatan jalur proxy khusus yang berdiri sendiri. Pada penny buat reverse proxy untuk path `/eternal` yang menyajikan directory `/var/www/eternal`, dan pastikan path ini dapat mengeksekusi (rendering) file `php`. Pada abbey, buat jalur `/orion` yang menyajikan directory `/var/www/orion`, secara murni statis tanpa perlu rendering php.
+
+### Pengerjaan
+
+Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka juga dapat menyajikan *file* lokal di _path_ tertentu (bersifat "berdiri sendiri" dari backend).
+
+1.  **Penny (Apache) — Jalur `/eternal` dengan PHP:**
+    - Karena menyajikan konten PHP, di dalam `setup-penny.sh` ditambahkan instalasi paket `php` dan `libapache2-mod-php`. Modul PHP diaktifkan via `a2enmod php8.2`.
+    - Dibuat direktori `/var/www/eternal` beserta berkas `index.php` berisikan skrip pencatat waktu server.
+    - Pada blok VirtualHost `www.K68.com`, akses menuju `/eternal` dikecualikan dari konfigurasi *proxy* (via `ProxyPass /eternal !`) dan diarahkan ke folder lokal menggunakan `Alias`:
+      ```apache
+      ProxyPass /eternal !
+      Alias /eternal /var/www/eternal
+      
+      <Directory /var/www/eternal>
+          Require all granted
+      </Directory>
+      ```
+
+2.  **Abbey (Nginx) — Jalur `/orion` Murni Statis:**
+    - Di dalam `setup-abbey.sh`, dibuat direktori `/var/www/orion` berisi `index.html` statis sederhana.
+    - Pada blok `server` milik `static.K68.com`, ditambahkan *location block* sebelum instruksi *proxy pass*:
+      ```nginx
+      location /orion {
+          alias /var/www/orion;
+          index index.html;
+      }
+      ```
+      Tanpa instalasi modul PHP, Nginx melayani `/orion` secara murni statis.
+
+
 ## Struktur Repository
 
 ```
