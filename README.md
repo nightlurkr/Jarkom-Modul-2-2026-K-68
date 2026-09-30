@@ -14,9 +14,9 @@
 | Nama | NRP | Soal |
 |---|---|---|
 | Ryan Adya Purwanto | 5027231046 | 1 – 9 |
-| Made Gde Krisna Wangsa | — | 10 – 20 |
+| Made Gde Krisna Wangsa | 5027201047 | 10 – 20 |
 
-Laporan ini mencakup **soal 1 sampai 9**.
+Laporan ini mencakup **soal 1 sampai 15**.
 
 ---
 
@@ -34,6 +34,12 @@ Laporan ini mencakup **soal 1 sampai 9**.
 - [Soal 7 — Record vault, core, dan CNAME](#soal-7--record-vault-core-dan-cname)
 - [Soal 8 — Reverse Zone dan PTR](#soal-8--reverse-zone-dan-ptr)
 - [Soal 9 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
+- [Soal 10 — Web Dinamis dan Rewrite URL](#soal-10--Web-Dinamis-dan-Rewrite-URL)
+- [Soal 11 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
+- [Soal 12 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
+- [Soal 13 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
+- [Soal 14 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
+- [Soal 15 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
 - [Struktur Repository](#struktur-repository)
 
 ---
