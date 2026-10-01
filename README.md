@@ -13,8 +13,8 @@
 
 | Nama | NRP | Soal |
 |---|---|---|
-| Ryan Adya Purwanto | 5027231046 | 1 – 9 |
-| Made Gde Krisna Wangsa | 5027201047 | 10 – 20 |
+| Ryan Adya Purwanto | 5027231046 | 1 - 9 |
+| Made Gde Krisna Wangsa | 5027201047 | 10 - 20 |
 
 Laporan ini mencakup **soal 1 sampai 15**.
 
@@ -25,30 +25,28 @@ Laporan ini mencakup **soal 1 sampai 15**.
 - [Topologi](#topologi)
 - [Pembagian IP](#pembagian-ip)
 - [Catatan Teknis Penting](#catatan-teknis-penting)
-- [Soal 1 — Topologi dan Pengalamatan IP](#soal-1--topologi-dan-pengalamatan-ip)
-- [Soal 2 — WAN dan NAT](#soal-2--wan-dan-nat)
-- [Soal 3 — Routing Internal dan Resolver Awal](#soal-3--routing-internal-dan-resolver-awal)
-- [Soal 4 — Zona DNS Master dan Slave](#soal-4--zona-dns-master-dan-slave)
-- [Soal 5 — Hostname dan Domain per Node](#soal-5--hostname-dan-domain-per-node)
-- [Soal 6 — Verifikasi Zone Transfer](#soal-6--verifikasi-zone-transfer)
-- [Soal 7 — Record vault, core, dan CNAME](#soal-7--record-vault-core-dan-cname)
-- [Soal 8 — Reverse Zone dan PTR](#soal-8--reverse-zone-dan-ptr)
-- [Soal 9 — Web Statis dan Autoindex](#soal-9--web-statis-dan-autoindex)
-- [Soal 10 — Web Dinamis dan Rewrite URL](#soal-10--Web-Dinamis-dan-Rewrite-URL)
-- [Soal 11 — Reverse Proxy dan Load Balancer](#soal-11--Reverse-Proxy-dan-Load-Balancer)
-- [Soal 12 — Basic Authentication](#soal-12--Basic-Authentication)
-- [Soal 13 — Redirection](#soal-13--Redirection)
-- [Soal 14 — Forwarding Real IP ke Access Log Backend](#soal-14--Forwarding-Real-IP-ke-Access-Log-Backend)
-- [Soal 15 — Jalur Proxy Khusus](#soal-15--Jalur-Proxy-Khusus)
-- [Soal 16 — Stress Test dengan ApacheBench](#soal-16--Stress-Test-dengan-ApacheBench)
-- [Soal 17 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-17--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
-- [Soal 18 — Perubahan A Record dan Verifikasi Tiga Fase TTL
-](#soal-18--Perubahan-A-Record-dan-Verifikasi-Tiga-Fase-TTL
-)
-- [Soal 19 — CNAME ke Domain Eksternal http.badssl.com](#soal-19--CNAME-ke-Domain-Eksternal-http.badssl.com)
-- [Soal 20 — Autostart Service dan Konfigurasi Setelah Restart
-](#soal-20--Autostart-Service-dan-Konfigurasi-Setelah-Restart
-)
+- [Soal 1: Topologi dan Pengalamatan IP](#soal-1-topologi-dan-pengalamatan-ip)
+- [Soal 2: WAN dan NAT](#soal-2-wan-dan-nat)
+- [Soal 3: Routing Internal dan Resolver Awal](#soal-3-routing-internal-dan-resolver-awal)
+- [Soal 4: Zona DNS Master dan Slave](#soal-4-zona-dns-master-dan-slave)
+- [Soal 5: Hostname dan Domain per Node](#soal-5-hostname-dan-domain-per-node)
+- [Soal 6: Verifikasi Zone Transfer](#soal-6-verifikasi-zone-transfer)
+- [Soal 7: Record vault, core, dan CNAME](#soal-7-record-vault-core-dan-cname)
+- [Soal 8: Reverse Zone dan PTR](#soal-8-reverse-zone-dan-ptr)
+- [Soal 9: Web Statis dan Autoindex](#soal-9-web-statis-dan-autoindex)
+- [Soal 10: Web Dinamis dan Rewrite URL](#soal-10-web-dinamis-dan-rewrite-url)
+- [Soal 11: Reverse Proxy dan Load Balancer](#soal-11-reverse-proxy-dan-load-balancer)
+- [Soal 12: Basic Authentication](#soal-12-basic-authentication)
+- [Soal 13: Redirection](#soal-13-redirection)
+- [Soal 14: Forwarding Real IP ke Access Log Backend](#soal-14-forwarding-real-ip-ke-access-log-backend)
+- [Soal 15: Jalur Proxy Khusus](#soal-15-jalur-proxy-khusus)
+- [Soal 16: Stress Test dengan ApacheBench](#soal-16-stress-test-dengan-apachebench)
+- [Soal 17: TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-17-txt-record-untuk-klien-sayap-kiri-dan-kanan)
+- [Soal 18: Perubahan A Record dan Verifikasi Tiga Fase TTL
+](#soal-18-perubahan-a-record-dan-verifikasi-tiga-fase-ttl)
+- [Soal 19: CNAME ke Domain Eksternal http.badssl.com](#soal-19-cname-ke-domain-eksternal-httpbadsslcom)
+- [Soal 20: Autostart Service dan Konfigurasi Setelah Restart
+](#soal-20-autostart-service-dan-konfigurasi-setelah-restart)
 - [Struktur Repository](#struktur-repository)
 
 ---
@@ -83,11 +81,11 @@ Switch2 dan Switch3 tidak tersambung ke rootkit melainkan ke Switch1. Karena swi
 
 | Node | IP | Gateway |
 |---|---|---|
-| rootkit eth1 | 192.245.1.1 | — |
-| rootkit eth2 | 192.245.2.1 | — |
-| rootkit eth3 | 192.245.3.1 | — |
-| rootkit eth4 | 192.245.4.1 | — |
-| rootkit eth5 | 192.245.5.1 | — |
+| rootkit eth1 | 192.245.1.1 | - |
+| rootkit eth2 | 192.245.2.1 | - |
+| rootkit eth3 | 192.245.3.1 | - |
+| rootkit eth4 | 192.245.4.1 | - |
+| rootkit eth5 | 192.245.5.1 | - |
 | alpha | 192.245.1.2 | 192.245.1.1 |
 | beta | 192.245.1.3 | 192.245.1.1 |
 | gamma | 192.245.1.4 | 192.245.1.1 |
@@ -117,23 +115,39 @@ Node Docker kembali ke kondisi image setiap kali dinyalakan ulang. Akibatnya `/e
 Karena itu perintah pengalihan output tidak boleh ditulis langsung di `interfaces`. Solusinya, perintah tersebut disembunyikan di dalam file script (`dns.sh`, `nat.sh`), dan `interfaces` hanya memanggilnya dengan `up bash /root/dns.sh`.
 
 **3. Jumlah adapter dinaikkan per node, bukan lewat template global.**
-`rootkit` memerlukan enam interface (`eth0`–`eth5`), sementara template default hanya menyediakan lebih sedikit. Karena praktikum berjalan di **remote controller yang dipakai bersama seluruh kelompok**, mengubah template global akan berdampak ke kelompok lain. Perubahan dilakukan lewat klik kanan node → Configure → Network → Adapters = 8, hanya pada `rootkit`.
+`rootkit` memerlukan enam interface (`eth0`-`eth5`), sementara template default hanya menyediakan lebih sedikit. Karena praktikum berjalan di **remote controller yang dipakai bersama seluruh kelompok**, mengubah template global akan berdampak ke kelompok lain. Perubahan dilakukan lewat klik kanan node → Configure → Network → Adapters = 8, hanya pada `rootkit`.
 
 ---
 
-## Soal 1 — Topologi dan Pengalamatan IP
+## Soal 1: Topologi dan Pengalamatan IP
 
-> Tetapkan alamat IP dan default gateway untuk seluruh Entitas sesuai dengan topologi pembagian switch yang dirancang.
+> Sebagai pusat kesadaran The Mesh, rootkit harus merentangkan koneksinya ke lima gerbang utama (Switch). Tetapkan alamat IP dan default gateway untuk seluruh Entitas, mulai dari para operator (alpha, beta, gamma), penjaga directory (prab, tedd), gerbang penyaring (abbey, penny), hingga repository (obladi, desmond, oblada, molly) sesuai dengan topologi pembagian switch yang dirancang.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Empat belas node DebiNet, tujuh Ethernet switch, dan satu node NAT disusun sesuai gambar topologi. Adapter `rootkit` dinaikkan menjadi 8 agar `eth0`–`eth5` tersedia.
+**1. Menyiapkan node dan switch.**
+Empat belas node DebiNet, tujuh Ethernet switch, dan satu node NAT disusun sesuai gambar topologi.
 
-Urutan penyambungan kabel di sisi `rootkit` dijaga berurutan dari `eth0`, karena nama interface di dalam node ditentukan oleh nomor slot adapter di GNS3. Kabel yang tertukar menghasilkan konfigurasi yang benar secara sintaks tetapi terpasang di jaringan yang salah.
+**2. Menaikkan jumlah adapter rootkit menjadi 8.**
+Dilakukan lewat klik kanan node → Configure → tab Network → Adapters, dalam keadaan node mati. Perubahan dilakukan **per node**, bukan lewat Edit → Preferences, karena template pada remote controller dipakai bersama seluruh kelompok.
 
-Konfigurasi ditulis melalui klik kanan node → **Edit network configuration** (node dalam keadaan mati), yang mengedit `/etc/network/interfaces`.
+**3. Menyambung kabel berurutan dari `eth0` di sisi rootkit.**
+Nama interface di dalam node ditentukan oleh nomor slot adapter di GNS3. Kabel yang tertukar menghasilkan konfigurasi yang benar secara sintaks tetapi terpasang di jaringan yang salah.
 
-**rootkit** — [`config/rootkit/interfaces`](config/rootkit/interfaces)
+| Port rootkit | Tujuan |
+|---|---|
+| eth0 | NAT1 |
+| eth1 | Switch6 |
+| eth2 | Switch7 |
+| eth3 | Switch4 |
+| eth4 | Switch5 |
+| eth5 | Switch1 |
+
+**4. Menulis konfigurasi IP** lewat klik kanan node → **Edit network configuration** (node dalam keadaan mati), yang mengedit `/etc/network/interfaces`.
+
+### Script dan Konfigurasi
+
+**rootkit** - `/etc/network/interfaces` - [`config/rootkit/interfaces`](config/rootkit/interfaces)
 
 ```
 auto eth0
@@ -144,12 +158,32 @@ iface eth1 inet static
 	address 192.245.1.1
 	netmask 255.255.255.0
 
-... eth2 sampai eth5 dengan pola yang sama
+auto eth2
+iface eth2 inet static
+	address 192.245.2.1
+	netmask 255.255.255.0
+
+auto eth3
+iface eth3 inet static
+	address 192.245.3.1
+	netmask 255.255.255.0
+
+auto eth4
+iface eth4 inet static
+	address 192.245.4.1
+	netmask 255.255.255.0
+
+auto eth5
+iface eth5 inet static
+	address 192.245.5.1
+	netmask 255.255.255.0
 ```
 
-Interface `eth1`–`eth5` sengaja **tidak diberi baris `gateway`**. Default gateway hanya boleh ada satu per host, dan bagi router jalur keluarnya adalah `eth0` yang sudah memperolehnya otomatis dari DHCP NAT. Menambahkan gateway di interface LAN akan membuat router mengarahkan trafik keluar ke jaringan internalnya sendiri.
+Interface `eth1`-`eth5` sengaja **tidak diberi baris `gateway`**. Default gateway hanya boleh ada satu per host, dan bagi router jalur keluarnya adalah `eth0` yang sudah memperolehnya otomatis dari DHCP NAT. Menambahkan gateway di interface LAN akan membuat router mengarahkan trafik keluar ke jaringan internalnya sendiri.
 
-**Node lain** — [`config/interfaces/`](config/interfaces/)
+**13 node non-router** - `/etc/network/interfaces` - [`config/interfaces/`](config/interfaces/)
+
+Pola yang sama di semua node, hanya `address` dan `gateway` yang berbeda. Contoh alpha:
 
 ```
 auto eth0
@@ -159,28 +193,54 @@ iface eth0 inet static
 	gateway 192.245.1.1
 ```
 
+| Node | address | gateway |
+|---|---|---|
+| alpha | 192.245.1.2 | 192.245.1.1 |
+| beta | 192.245.1.3 | 192.245.1.1 |
+| gamma | 192.245.1.4 | 192.245.1.1 |
+| delta | 192.245.2.2 | 192.245.2.1 |
+| epsilon | 192.245.2.3 | 192.245.2.1 |
+| abbey | 192.245.3.2 | 192.245.3.1 |
+| penny | 192.245.4.2 | 192.245.4.1 |
+| prab | 192.245.5.2 | 192.245.5.1 |
+| tedd | 192.245.5.3 | 192.245.5.1 |
+| obladi | 192.245.5.4 | 192.245.5.1 |
+| desmond | 192.245.5.5 | 192.245.5.1 |
+| oblada | 192.245.5.6 | 192.245.5.1 |
+| molly | 192.245.5.7 | 192.245.5.1 |
+
+> Pada soal 3 setiap blok `iface` ini ditambah baris `up bash /root/dns.sh`, dan pada soal 20 baris tersebut diganti menjadi `up bash /root/start-all.sh`.
+
 ### Pengujian
 
 ![Soal 1](screenshot/soal01-ip-dan-ping.png)
 
 | Uji | Hasil |
 |---|---|
-| `ip a` di rootkit | eth1–eth5 memegang IP sesuai rancangan |
+| `ip a` di rootkit | eth1-eth5 memegang IP sesuai rancangan |
 | alpha → 192.245.1.1 | berhasil, gateway terjangkau |
 | alpha → beta | berhasil, komunikasi sesubnet |
-| prab → obladi | berhasil, membuktikan cascade Switch1–2–3 benar-benar satu subnet |
+| prab → obladi | berhasil, membuktikan cascade Switch1-2-3 benar-benar satu subnet |
 
 ---
 
-## Soal 2 — WAN dan NAT
+## Soal 2: WAN dan NAT
 
-> Pastikan antarmuka WAN di router rootkit aktif. Konfigurasikan NAT agar dapat meneruskan lalu lintas keluar bagi seluruh alamat internal.
+> Meskipun The Mesh beroperasi dalam bayang-bayang, Rootkit menyadari bahwa Entitas di dalamnya masih membutuhkan asupan paket dari dunia luar. Buka jalur menuju NAT dengan memastikan antarmuka WAN di router rootkit aktif. Konfigurasikan NAT agar dapat meneruskan lalu lintas keluar bagi seluruh alamat internal, sehingga semua host di dalam jaringan dapat menjangkau internet publik menggunakan IP address.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Node internal memakai alamat `192.245.x.x` yang tidak dikenal internet. Router harus menyamarkan alamat asal paket dengan alamat `eth0` miliknya sendiri — inilah yang dilakukan target `MASQUERADE`.
+**1. Memastikan `eth0` aktif dan memperoleh alamat dari NAT.**
+Diperiksa dengan `ip a show eth0`, memperoleh `192.168.122.69/24`.
 
-**rootkit** — [`config/rootkit/nat.sh`](config/rootkit/nat.sh)
+**2. Menulis script NAT di `/root/nat.sh`.**
+Diletakkan di `/root` karena hanya direktori itu dan `/etc/network/interfaces` yang bertahan saat node restart.
+
+**3. Menjalankan script dan memverifikasi aturan iptables.**
+
+### Script dan Konfigurasi
+
+**rootkit** - `/root/nat.sh` - [`config/rootkit/nat.sh`](config/rootkit/nat.sh)
 
 ```bash
 #!/bin/bash
@@ -188,9 +248,23 @@ sysctl -w net.ipv4.ip_forward=1
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ```
 
+Perintah yang dijalankan di konsol rootkit:
+
+```bash
+cat > /root/nat.sh <<'EOF'
+#!/bin/bash
+sysctl -w net.ipv4.ip_forward=1
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+EOF
+chmod +x /root/nat.sh
+bash /root/nat.sh
+```
+
 `ip_forward` mengizinkan kernel meneruskan paket antar interface. Tanpa ini node hanya bisa berbicara dengan tetangga sesubnet.
 
 `MASQUERADE` dipilih daripada `SNAT` karena alamat `eth0` diperoleh lewat DHCP dan bisa berubah. `MASQUERADE` membaca alamat interface secara dinamis, sedangkan `SNAT` memerlukan alamat yang ditulis tetap.
+
+> Pada soal 20, baris `iptables -A` diganti menjadi pola `-C ... || -A` agar aturan tidak menumpuk setiap kali script dipanggil saat boot.
 
 ### Pengujian
 
@@ -204,29 +278,67 @@ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
 ---
 
-## Soal 3 — Routing Internal dan Resolver Awal
+## Soal 3: Routing Internal dan Resolver Awal
 
-> Pastikan seluruh Entitas dapat saling terhubung dan berkomunikasi lintas jalur. Pastikan setiap host non-router menambahkan resolver 192.168.122.1 **saat antarmukanya aktif**.
+> Jaringan rahasia tidak akan berfungsi tanpa sinkronisasi antar divisi. Pastikan seluruh Entitas dapat saling terhubung dan berkomunikasi lintas jalur (routing internal via rootkit berfungsi). Untuk menghindari fragmentasi saat persiapan, pastikan setiap host non-router menambahkan resolver 192.168.122.1 saat antarmukanya aktif agar akses untuk mengunduh paket instalasi dari internet tersedia sejak awal beroperasi.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Routing antar subnet tidak memerlukan konfigurasi tambahan: begitu `ip_forward=1` aktif di rootkit dan setiap node memiliki default gateway yang benar, router sudah mengenal kelima subnet secara langsung melalui interface-nya masing-masing.
+**1. Routing antar subnet tidak memerlukan konfigurasi tambahan.**
+Begitu `ip_forward=1` aktif di rootkit dan setiap node memiliki default gateway yang benar, router sudah mengenal kelima subnet secara langsung melalui interface-nya masing-masing.
 
-Frasa **"saat antarmukanya aktif"** dalam soal menentukan cara pengerjaannya. `/etc/resolv.conf` termasuk file yang hilang setiap node restart, sehingga resolver tidak boleh diketik manual melainkan harus dipasang ulang otomatis setiap interface naik.
+**2. Membuat `/root/dns.sh` di 13 node non-router** (node dalam keadaan hidup).
 
-**13 node non-router** — [`config/dns.sh`](config/dns.sh)
+**3. Memasang pemanggil di `/etc/network/interfaces`** (node dalam keadaan mati).
+
+Frasa **"saat antarmukanya aktif"** pada soal menentukan cara pengerjaannya. `/etc/resolv.conf` termasuk file yang hilang setiap node restart, sehingga resolver tidak boleh diketik manual melainkan harus dipasang ulang otomatis setiap interface naik.
+
+### Script dan Konfigurasi
+
+**13 node non-router** - `/root/dns.sh` (versi soal 3)
 
 ```bash
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 ```
 
-dipanggil dari `/etc/network/interfaces`:
+Perintah yang dijalankan di konsol tiap node:
+
+```bash
+cat > /root/dns.sh <<'EOF'
+echo "nameserver 192.168.122.1" > /etc/resolv.conf
+EOF
+chmod +x /root/dns.sh
+bash /root/dns.sh
+```
+
+**13 node non-router** - `/etc/network/interfaces`, satu baris ditambahkan di bawah `gateway`:
 
 ```
 	up bash /root/dns.sh
 ```
 
-Perintah pengalihan `>` sengaja ditempatkan di dalam file script, bukan langsung sebagai baris `up`, karena editor GNS3 akan membuang baris yang memuat karakter tersebut.
+Sehingga blok `iface` alpha menjadi:
+
+```
+auto eth0
+iface eth0 inet static
+	address 192.245.1.2
+	netmask 255.255.255.0
+	gateway 192.245.1.1
+	up bash /root/dns.sh
+```
+
+**rootkit** - `/etc/network/interfaces`, pemanggil NAT ditambahkan:
+
+```
+auto eth0
+iface eth0 inet dhcp
+	up bash /root/nat.sh
+```
+
+Perintah pengalihan `>` sengaja ditempatkan **di dalam file script**, bukan langsung sebagai baris `up`. Editor "Edit network configuration" GNS3 membuang baris yang memuat karakter `>`, sehingga penulisan langsung akan hilang tanpa peringatan.
+
+> Isi `dns.sh` diperluas pada soal 4 (urutan resolver prab → tedd → 192.168.122.1) dan soal 5 (penulisan `/etc/hosts`). Versi finalnya ada di [`config/dns.sh`](config/dns.sh).
 
 ### Pengujian
 
@@ -243,31 +355,127 @@ Nilai **ttl 63** menunjukkan paket melewati tepat satu router, sesuai rancangan.
 
 ---
 
-## Soal 4 — Zona DNS Master dan Slave
+## Soal 4: Zona DNS Master dan Slave
 
-> Pada node prab, bangun zona `K68.com` sebagai authoritative dengan SOA yang menunjuk ke `prab.K68.com`, tambahkan NS untuk prab dan tedd, A record untuk keduanya, serta A record apex yang mengarah ke penny. Aktifkan notify dan allow-transfer ke tedd, set forwarders ke 192.168.122.1. Di tedd, tarik zona sebagai slave.
+> Penjaga Direktori mulai menuliskan hukum The Mesh. Pada node prab, bangun zona `K68.com` sebagai authoritative dengan SOA yang menunjuk ke `prab.K68.com`, serta tambahkan catatan NS untuk `prab.K68.com` dan `tedd.K68.com`. Buat A record untuk keduanya yang mengarah ke alamat IP mereka masing-masing, serta A record apex `K68.com` yang mengarah ke gerbang aplikasi dinamis (penny). Aktifkan fitur notify dan allow-transfer ke tedd, lalu set forwarders ke 192.168.122.1. Di node tedd, tarik zona dari master dan pastikan server menjawab secara authoritative. Setelah itu, perbarui urutan resolver pada seluruh Entitas non-router menjadi: IP prab, IP tedd, lalu 192.168.122.1.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Seluruh konfigurasi BIND ditulis melalui script di `/root`, bukan diketik ke `/etc/bind`, karena direktori tersebut hilang setiap node restart.
+**1. Menulis seluruh konfigurasi BIND sebagai script di `/root/setup-dns.sh`,** bukan mengetik langsung ke `/etc/bind`. Direktori `/etc/bind` hilang setiap node restart, sehingga konfigurasi harus dapat dibangun ulang dari `/root`.
 
-**prab (ns1, master)** — [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+**2. Menjalankan script di prab, lalu memverifikasi dengan `named-checkconf` dan `named-checkzone`.**
+
+**3. Menjalankan script serupa di tedd dengan `type slave`.**
+
+**4. Memperbarui urutan resolver di 13 node non-router.**
+
+### Script dan Konfigurasi
+
+**prab (ns1, master)** - `/root/setup-dns.sh` - [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+
+```bash
+#!/bin/bash
+apt-get update -y
+apt-get install -y bind9 dnsutils
+ln -sf /etc/init.d/named /etc/init.d/bind9
+mkdir -p /etc/bind/jarkom
+
+cat > /etc/bind/named.conf.local <<'EOF'
+zone "K68.com" {
+    type master;
+    notify yes;
+    also-notify { 192.245.5.3; };
+    allow-transfer { 192.245.5.3; };
+    file "/etc/bind/jarkom/K68.com";
+};
+EOF
+
+cat > /etc/bind/named.conf.options <<'EOF'
+options {
+    directory "/var/cache/bind";
+    forwarders {
+        192.168.122.1;
+    };
+    dnssec-validation no;
+    allow-query { any; };
+    auth-nxdomain no;
+    listen-on-v6 { any; };
+};
+EOF
+
+cat > /etc/bind/jarkom/K68.com <<'EOF'
+$TTL    604800
+@       IN      SOA     prab.K68.com. root.K68.com. (
+                        2026093001 ; Serial
+                        604800     ; Refresh
+                        86400      ; Retry
+                        2419200    ; Expire
+                        604800 )   ; Negative Cache TTL
+;
+@       IN      NS      prab.K68.com.
+@       IN      NS      tedd.K68.com.
+@       IN      A       192.245.4.2
+
+prab    IN      A       192.245.5.2
+tedd    IN      A       192.245.5.3
+EOF
+
+service bind9 restart
+```
 
 ![Config prab](screenshot/soal04-config-prab.png)
 
-`notify yes` membuat master mengabari slave setiap zona berubah, `also-notify` menyebut alamat slave secara eksplisit, dan `allow-transfer` memberi izin slave menarik salinan zona. Ketiganya harus ada — tanpa `allow-transfer`, notify tetap terkirim tetapi transfer akan ditolak.
+`notify yes` membuat master mengabari slave setiap zona berubah, `also-notify` menyebut alamat slave secara eksplisit, dan `allow-transfer` memberi izin slave menarik salinan zona. Ketiganya harus ada - tanpa `allow-transfer`, notify tetap terkirim tetapi transfer akan ditolak.
 
 `forwarders` mengarahkan pertanyaan di luar zona `K68.com` ke DNS milik NAT, sehingga node tetap dapat membuka alamat internet meski resolver-nya sudah diarahkan ke prab.
 
 ![Zona prab](screenshot/soal04-zona-prab.png)
 
-**tedd (ns2, slave)** — [`config/tedd/setup-dns.sh`](config/tedd/setup-dns.sh)
+**tedd (ns2, slave)** - `/root/setup-dns.sh` - [`config/tedd/setup-dns.sh`](config/tedd/setup-dns.sh)
+
+```bash
+#!/bin/bash
+apt-get update -y
+apt-get install -y bind9 dnsutils
+ln -sf /etc/init.d/named /etc/init.d/bind9
+mkdir -p /etc/bind/jarkom
+chown -R bind:bind /etc/bind/jarkom
+
+cat > /etc/bind/named.conf.local <<'EOF'
+zone "K68.com" {
+    type slave;
+    masters { 192.245.5.2; };
+    file "/etc/bind/jarkom/K68.com";
+};
+EOF
+
+cat > /etc/bind/named.conf.options <<'EOF'
+options {
+    directory "/var/cache/bind";
+    forwarders {
+        192.168.122.1;
+    };
+    dnssec-validation no;
+    allow-query { any; };
+    auth-nxdomain no;
+    listen-on-v6 { any; };
+};
+EOF
+
+service bind9 restart
+```
 
 ![Config tedd](screenshot/soal04-config-tedd.png)
 
 Baris `chown -R bind:bind /etc/bind/jarkom` bersifat wajib pada slave. File hasil zone transfer ditulis oleh proses `named` yang berjalan sebagai user `bind`; tanpa kepemilikan yang benar, transfer akan gagal dan zona tidak pernah termuat.
 
-Setelah zona berdiri, resolver di seluruh node non-router diurutkan ulang menjadi prab, tedd, lalu 192.168.122.1.
+**13 node non-router** - `/root/dns.sh` diperbarui, resolver diurutkan ulang:
+
+```bash
+echo "nameserver 192.245.5.2" > /etc/resolv.conf
+echo "nameserver 192.245.5.3" >> /etc/resolv.conf
+echo "nameserver 192.168.122.1" >> /etc/resolv.conf
+```
 
 ### Pengujian
 
@@ -286,17 +494,23 @@ Flag **`aa`** (authoritative answer) pada jawaban kedua server menandakan keduan
 
 ---
 
-## Soal 5 — Hostname dan Domain per Node
+## Soal 5: Hostname dan Domain per Node
 
-> Namai semua Entitas sesuai glosarium dan verifikasi bahwa setiap host mengenali hostname tersebut secara system-wide. Buat domain untuk masing-masing node beserta IP-nya. Lakukan pengecualian untuk prab dan tedd.
+> "Entitas tanpa identitas adalah anomali," pesan Rootkit. Namai semua Entitas (hostname) sesuai glosarium dan verifikasi bahwa setiap host mengenali hostname tersebut secara system-wide. Buat setiap domain untuk masing-masing node sesuai dengan namanya dan assign IP masing-masing juga. Lakukan pengecualian untuk node yang bertanggung jawab atas prab dan tedd.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Hostname pendek setiap node sudah benar sejak awal karena GNS3 menetapkannya dari nama node, terbukti dari prompt `root@alpha:~#`.
+**1. Hostname pendek tidak perlu dikonfigurasi.**
+GNS3 sudah menetapkannya dari nama node, terbukti dari prompt `root@alpha:~#`.
 
-Yang belum terpenuhi adalah pengenalan **system-wide**: `hostname -f` masih mengembalikan nama pendek. Penyebabnya, `/etc/hosts` bawaan container hanya memuat pasangan alamat dan nama pendek, dan `hostname -f` membaca `/etc/hosts` lebih dahulu daripada DNS. Menambahkan `search` saja tidak menolong karena berkas lokal selalu diperiksa lebih dulu.
+**2. Memperbaiki `hostname -f` yang masih mengembalikan nama pendek.**
+Penyebabnya, `/etc/hosts` bawaan container hanya memuat pasangan alamat dan nama pendek, dan `hostname -f` membaca `/etc/hosts` lebih dahulu daripada DNS. Menambahkan `search` saja tidak menolong karena berkas lokal selalu diperiksa lebih dulu.
 
-Penyelesaiannya menambahkan penulisan `/etc/hosts` ke dalam `dns.sh` yang sudah terpasang — [`config/dns.sh`](config/dns.sh):
+**3. Menambah 12 A record ke zona di prab dan menaikkan serial.**
+
+### Script dan Konfigurasi
+
+**13 node non-router** - `/root/dns.sh` versi final - [`config/dns.sh`](config/dns.sh)
 
 ```bash
 echo "search K68.com" > /etc/resolv.conf
@@ -305,17 +519,52 @@ echo "nameserver 192.245.5.3" >> /etc/resolv.conf
 echo "nameserver 192.168.122.1" >> /etc/resolv.conf
 
 NAME=$(hostname -s)
-IP=$(hostname -I | awk '{print $1}')
+IP=$(ip -4 addr show eth0 | awk '/inet /{print $2}' | cut -d/ -f1)
+
 grep -vw "$NAME" /etc/hosts > /root/hosts.tmp
-echo "$IP $NAME.K68.com $NAME" >> /root/hosts.tmp
+if [ -n "$IP" ]; then
+    echo "$IP $NAME.K68.com $NAME" >> /root/hosts.tmp
+fi
 cat /root/hosts.tmp > /etc/hosts
 ```
 
-Script dibuat generik — membaca hostname dan alamat node sendiri — sehingga isinya identik di ketiga belas node dan tidak perlu disesuaikan satu per satu.
+Script dibuat generik - membaca hostname dan alamat node sendiri - sehingga isinya identik di ketiga belas node dan tidak perlu disesuaikan satu per satu.
 
-Selanjutnya dua belas A record ditambahkan ke zona. **prab dan tedd dikecualikan** karena keduanya sudah memiliki A record sejak soal 4; menambahkannya lagi akan menghasilkan duplikat. Serial dinaikkan dari `2026093001` menjadi `2026093002`.
+**Catatan penting mengenai pengambilan alamat IP.** Versi pertama script ini memakai `hostname -I`. Perintah tersebut berhasil ketika script dijalankan manual dari konsol, sehingga pengujian soal 5 lolos. Namun ketika script dipanggil oleh hook `up` saat node melakukan boot, `PATH` yang berlaku minimal dan `hostname` menunjuk ke **BusyBox**, yang tidak mendukung flag `-I`. Akibatnya variabel `IP` kosong dan baris yang ditulis ke `/etc/hosts` menjadi cacat (` nama.K68.com nama` tanpa alamat), sehingga `hostname -f` gagal setiap kali node dinyalakan ulang.
+
+Kegagalan ini baru terlihat setelah soal 20 memindahkan pemanggilan script ke proses boot. Perbaikannya dua lapis: alamat diambil dengan `ip -4 addr show eth0` yang tersedia baik di BusyBox maupun coreutils, dan ditambahkan penjaga `if [ -n "$IP" ]` agar baris cacat tidak pernah ditulis sekalipun pengambilan alamat gagal.
+
+**rootkit** - `/root/hostname.sh` - [`config/rootkit/hostname.sh`](config/rootkit/hostname.sh)
+
+rootkit memiliki banyak alamat sehingga tidak bisa memakai script generik di atas:
+
+```bash
+#!/bin/bash
+grep -vw rootkit /etc/hosts > /root/hosts.tmp
+echo "192.245.1.1 rootkit.K68.com rootkit" >> /root/hosts.tmp
+cat /root/hosts.tmp > /etc/hosts
+```
+
+**prab** - tambahan pada `/etc/bind/jarkom/K68.com`, serial dinaikkan ke `2026093002`:
+
+```
+rootkit IN      A       192.245.1.1
+alpha   IN      A       192.245.1.2
+beta    IN      A       192.245.1.3
+gamma   IN      A       192.245.1.4
+delta   IN      A       192.245.2.2
+epsilon IN      A       192.245.2.3
+abbey   IN      A       192.245.3.2
+penny   IN      A       192.245.4.2
+obladi  IN      A       192.245.5.4
+desmond IN      A       192.245.5.5
+oblada  IN      A       192.245.5.6
+molly   IN      A       192.245.5.7
+```
 
 ![Zona lengkap](screenshot/soal05-zona-lengkap.png)
+
+**prab dan tedd dikecualikan** dari penambahan A record karena keduanya sudah memilikinya sejak soal 4; menambahkannya lagi akan menghasilkan duplikat.
 
 Perlu dibedakan: pengecualian ini hanya berlaku untuk A record di zona. Untuk `dns.sh`, prab dan tedd **tetap ikut** karena soal 4 meminta resolver diurutkan ulang pada seluruh Entitas non-router.
 
@@ -330,33 +579,46 @@ Perlu dibedakan: pengecualian ini hanya berlaku untuk A record di zona. Untuk `d
 | `hostname -f` di delta, penny, beta, abbey | mengembalikan FQDN lengkap |
 | `dig <node>.K68.com +short` | seluruh node sesuai tabel alamat |
 
-### Kendala yang ditemui
+### Kendala yang Ditemui
 
 Setelah konfigurasi diperbarui, seluruh kueri DNS gagal dengan `connection refused` dari prab maupun tedd.
 
 Pemeriksaan pertama di tedd menghasilkan ratusan baris `line 1: syntax error` dari `named-checkzone`. **Diagnosa ini menyesatkan.** File zona pada server slave disimpan BIND dalam format raw (biner), bukan teks, sehingga `named-checkzone` memang tidak dapat membacanya. Error tersebut normal dan bukan penyebab masalah.
 
-Pemeriksaan ulang dilakukan di master. File zona terbukti sehat — 27 baris, `named-checkzone` mengembalikan `OK`, serial terbaca `2026093002`. Yang bermasalah adalah `service bind9 status` yang melaporkan `bind is not running`. Node sempat dimatikan untuk mengedit `interfaces`, dan BIND tidak menyala otomatis saat node dihidupkan kembali. Perbaikannya menjalankan `service bind9 start` di prab dan tedd.
+Pemeriksaan ulang dilakukan di master. File zona terbukti sehat - 27 baris, `named-checkzone` mengembalikan `OK`, serial terbaca `2026093002`. Yang bermasalah adalah `service bind9 status` yang melaporkan `bind is not running`. Node sempat dimatikan untuk mengedit `interfaces`, dan BIND tidak menyala otomatis saat node dihidupkan kembali. Perbaikannya menjalankan `service bind9 start` di prab dan tedd.
 
-Urutan diagnosa yang benar untuk kasus DNS mati: periksa status service di **master** lebih dahulu, jalankan `named-checkzone` hanya di master, baru periksa slave.
+Urutan diagnosa yang benar untuk kasus DNS mati: periksa status service di **master** lebih dahulu, jalankan `named-checkzone` hanya di master, baru periksa slave. Persistensi service inilah yang kemudian diselesaikan pada soal 20.
 
 ---
 
-## Soal 6 — Verifikasi Zone Transfer
+## Soal 6: Verifikasi Zone Transfer
 
-> Pastikan zone transfer berjalan dan tedd telah menerima salinan zona terbaru dari prab. Nilai serial SOA di keduanya harus sama.
+> Pastikan zone transfer berjalan, pastikan tedd telah menerima salinan zona terbaru dari prab. Nilai serial SOA di keduanya harus sama karena keduanya tidak bisa dipisahkan dan saling melengkapi.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Soal ini tidak memerlukan konfigurasi baru. Seluruh mekanismenya sudah dipasang pada soal 4: `notify yes`, `also-notify`, dan `allow-transfer` di sisi master, serta `type slave` dan `masters` di sisi slave.
+Soal ini **tidak memerlukan script atau konfigurasi baru**. Seluruh mekanismenya sudah dipasang pada soal 4:
+
+| Sisi | Konfigurasi | Fungsi |
+|---|---|---|
+| prab (master) | `notify yes` | mengabari slave setiap zona berubah |
+| prab (master) | `also-notify { 192.245.5.3; }` | menyebut alamat slave secara eksplisit |
+| prab (master) | `allow-transfer { 192.245.5.3; }` | mengizinkan slave menarik salinan zona |
+| tedd (slave) | `type slave` + `masters { 192.245.5.2; }` | menarik zona dari master |
 
 Yang dibuktikan adalah bahwa mekanisme tersebut benar-benar bekerja: serial di tedd ikut naik menjadi `2026093002` setelah zona diubah pada soal 5, **tanpa disentuh secara manual**.
+
+Apabila slave tertinggal, transfer dapat dipaksa dari tedd dengan:
+
+```bash
+rndc retransfer K68.com
+```
 
 ### Pengujian
 
 ![Serial sama](screenshot/soal06-serial-sama.png)
 
-```
+```bash
 dig @192.245.5.2 K68.com SOA +short
 dig @192.245.5.3 K68.com SOA +short
 ```
@@ -367,13 +629,20 @@ Log transfer tidak dapat dilampirkan karena container DebiNet tidak menjalankan 
 
 ---
 
-## Soal 7 — Record vault, core, dan CNAME
+## Soal 7: Record vault, core, dan CNAME
 
-> Tambahkan A record untuk `vault.K68.com` (IP obladi dan desmond) dan `core.K68.com` (IP oblada dan molly). Tetapkan CNAME `www` ke penny dan `static` ke abbey. Verifikasi dari dua klien berbeda.
+> Tambahkan pada zona `K68.com` A record untuk `vault.K68.com` (IP obladi & desmond), dan `core.K68.com` (IP oblada & molly). Tetapkan CNAME `www.K68.com` → `penny.K68.com` dan `static.K68.com` → `abbey.K68.com`. Verifikasi dari dua klien berbeda bahwa seluruh hostname tersebut ter-resolve ke tujuan yang benar dan konsisten.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-![Zona soal 7](screenshot/soal07-zona.png)
+**1. Menambahkan empat nama baru ke zona di prab.**
+**2. Menaikkan serial ke `2026093003` dan menjalankan ulang `setup-dns.sh`.**
+**3. Memastikan tedd ikut tersinkron.**
+**4. Menguji dari dua klien berbeda** sesuai permintaan eksplisit soal.
+
+### Script dan Konfigurasi
+
+**prab** - tambahan pada `/etc/bind/jarkom/K68.com`:
 
 ```
 vault   IN      A       192.245.5.4
@@ -385,15 +654,15 @@ www     IN      CNAME   penny.K68.com.
 static  IN      CNAME   abbey.K68.com.
 ```
 
+![Zona soal 7](screenshot/soal07-zona.png)
+
 `vault` dan `core` masing-masing memiliki **dua A record** karena kedua area tersebut terdiri dari sepasang node, bukan satu. Satu nama dengan dua A record membuat DNS memutar urutan jawaban setiap kali ditanya, dan inilah dasar pembagian beban yang dipakai pada soal 11.
 
 Kedua CNAME **wajib diakhiri titik**. Tanpa titik penutup, BIND memperlakukan nilainya sebagai nama relatif dan menambahkan nama zona sekali lagi, sehingga `penny.K68.com` menjadi `penny.K68.com.K68.com`.
 
-Serial dinaikkan menjadi `2026093003`.
-
 ### Pengujian
 
-Soal meminta verifikasi dari dua klien berbeda, dilakukan dari **alpha** (subnet 1) dan **delta** (subnet 2).
+Dilakukan dari **alpha** (subnet 1) dan **delta** (subnet 2).
 
 ![Dig alpha](screenshot/soal07-dig-alpha.png)
 
@@ -406,43 +675,141 @@ Soal meminta verifikasi dari dua klien berbeda, dilakukan dari **alpha** (subnet
 | `www.K68.com` | `penny.K68.com.` → 192.245.4.2 |
 | `static.K68.com` | `abbey.K68.com.` → 192.245.3.2 |
 
-Urutan kedua alamat pada `vault` berbeda antara alpha dan delta. Ini bukan ketidakkonsistenan melainkan **round-robin** DNS yang bekerja sebagaimana mestinya — himpunan jawabannya identik, hanya urutannya yang diputar.
+Urutan kedua alamat pada `vault` berbeda antara alpha dan delta. Ini bukan ketidakkonsistenan melainkan **round-robin** DNS yang bekerja sebagaimana mestinya - himpunan jawabannya identik, hanya urutannya yang diputar.
 
 ---
 
-## Soal 8 — Reverse Zone dan PTR
+## Soal 8: Reverse Zone dan PTR
 
-> Deklarasikan reverse zone untuk segmen jaringan tempat abbey, penny, area vault, dan area core berada. Tarik sebagai slave di tedd, isi PTR untuk keempat hostname itu, dan pastikan query reverse dijawab authoritative.
+> Di prab (ns1) deklarasikan reverse zone untuk segmen jaringan tempat abbey, penny, area vault, dan area core berada. Di tedd (ns2) tarik reverse zone tersebut sebagai slave, isi PTR untuk keempat hostname itu agar pencarian balik IP address mengembalikan hostname yang benar, lalu pastikan query reverse untuk alamat abbey, penny, area vault, dan area core dijawab authoritative.
 
-### Pertimbangan
+### Pertimbangan Sebelum Pengerjaan
 
 Soal menyebut "segmen" dalam bentuk tunggal, sementara keempat entitas tersebar di tiga subnet berbeda: abbey di `192.245.3.0/24`, penny di `192.245.4.0/24`, serta area vault dan core di `192.245.5.0/24`.
 
 Diputuskan membuat **tiga reverse zone**, satu untuk setiap /24. Dasarnya, modul DNS mengajarkan pola reverse berbasis tiga byte pertama alamat, dan tiga zona memastikan seluruh alamat yang diminta tercakup.
 
-Alternatif berupa satu zona pada level `245.192.in-addr.arpa` — mencakup seluruh `/16` sekaligus — secara teknis sah dan lebih literal terhadap kata "segmen" tunggal, namun menyimpang dari pola yang diajarkan modul sehingga tidak dipilih.
+Alternatif berupa satu zona pada level `245.192.in-addr.arpa` - mencakup seluruh `/16` sekaligus - secara teknis sah dan lebih literal terhadap kata "segmen" tunggal, namun menyimpang dari pola yang diajarkan modul sehingga tidak dipilih.
 
 Record PTR diarahkan ke **nama node**, bukan ke `vault.K68.com` atau `core.K68.com`. Glosarium mendefinisikan area vault sebagai kelompok node obladi dan desmond, sehingga "PTR untuk area vault" berarti PTR bagi kedua node tersebut. Ini juga sesuai konvensi DNS: PTR menunjuk ke nama kanonik sebuah host, bukan ke nama bersama yang memiliki banyak A record.
 
-### Pengerjaan
+### Script dan Konfigurasi
 
-**prab** — [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+**prab** - tambahan pada `/etc/bind/named.conf.local`:
+
+```
+zone "3.245.192.in-addr.arpa" {
+    type master;
+    notify yes;
+    also-notify { 192.245.5.3; };
+    allow-transfer { 192.245.5.3; };
+    file "/etc/bind/jarkom/3.245.192.in-addr.arpa";
+};
+
+zone "4.245.192.in-addr.arpa" {
+    type master;
+    notify yes;
+    also-notify { 192.245.5.3; };
+    allow-transfer { 192.245.5.3; };
+    file "/etc/bind/jarkom/4.245.192.in-addr.arpa";
+};
+
+zone "5.245.192.in-addr.arpa" {
+    type master;
+    notify yes;
+    also-notify { 192.245.5.3; };
+    allow-transfer { 192.245.5.3; };
+    file "/etc/bind/jarkom/5.245.192.in-addr.arpa";
+};
+```
 
 ![Config reverse prab](screenshot/soal08-config-prab.png)
 
-![Zona reverse](screenshot/soal08-zona-reverse.png)
+**prab** - `/etc/bind/jarkom/3.245.192.in-addr.arpa`:
 
-| Zona | Isi |
-|---|---|
-| `3.245.192.in-addr.arpa` | `2 → abbey.K68.com.` |
-| `4.245.192.in-addr.arpa` | `2 → penny.K68.com.` |
-| `5.245.192.in-addr.arpa` | `2 → prab`, `3 → tedd`, `4 → obladi`, `5 → desmond`, `6 → oblada`, `7 → molly` |
+```
+$TTL    604800
+@       IN      SOA     prab.K68.com. root.K68.com. (
+                        2026093001 ; Serial
+                        604800     ; Refresh
+                        86400      ; Retry
+                        2419200    ; Expire
+                        604800 )   ; Negative Cache TTL
+;
+@       IN      NS      prab.K68.com.
+@       IN      NS      tedd.K68.com.
+
+2       IN      PTR     abbey.K68.com.
+```
+
+**prab** - `/etc/bind/jarkom/4.245.192.in-addr.arpa`:
+
+```
+$TTL    604800
+@       IN      SOA     prab.K68.com. root.K68.com. (
+                        2026093001 ; Serial
+                        604800     ; Refresh
+                        86400      ; Retry
+                        2419200    ; Expire
+                        604800 )   ; Negative Cache TTL
+;
+@       IN      NS      prab.K68.com.
+@       IN      NS      tedd.K68.com.
+
+2       IN      PTR     penny.K68.com.
+```
+
+**prab** - `/etc/bind/jarkom/5.245.192.in-addr.arpa`:
+
+```
+$TTL    604800
+@       IN      SOA     prab.K68.com. root.K68.com. (
+                        2026093001 ; Serial
+                        604800     ; Refresh
+                        86400      ; Retry
+                        2419200    ; Expire
+                        604800 )   ; Negative Cache TTL
+;
+@       IN      NS      prab.K68.com.
+@       IN      NS      tedd.K68.com.
+
+2       IN      PTR     prab.K68.com.
+3       IN      PTR     tedd.K68.com.
+4       IN      PTR     obladi.K68.com.
+5       IN      PTR     desmond.K68.com.
+6       IN      PTR     oblada.K68.com.
+7       IN      PTR     molly.K68.com.
+```
+
+![Zona reverse](screenshot/soal08-zona-reverse.png)
 
 prab dan tedd turut dimasukkan ke zona `.5` meski tidak diminta soal, agar zona tersebut lengkap untuk seluruh penghuni subnetnya.
 
-**tedd** — [`config/tedd/setup-dns.sh`](config/tedd/setup-dns.sh)
+**tedd** - tambahan pada `/etc/bind/named.conf.local`:
+
+```
+zone "3.245.192.in-addr.arpa" {
+    type slave;
+    masters { 192.245.5.2; };
+    file "/etc/bind/jarkom/3.245.192.in-addr.arpa";
+};
+
+zone "4.245.192.in-addr.arpa" {
+    type slave;
+    masters { 192.245.5.2; };
+    file "/etc/bind/jarkom/4.245.192.in-addr.arpa";
+};
+
+zone "5.245.192.in-addr.arpa" {
+    type slave;
+    masters { 192.245.5.2; };
+    file "/etc/bind/jarkom/5.245.192.in-addr.arpa";
+};
+```
 
 ![Config reverse tedd](screenshot/soal08-config-tedd.png)
+
+Script lengkap kedua node ada di [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh) dan [`config/tedd/setup-dns.sh`](config/tedd/setup-dns.sh).
 
 ### Pengujian
 
@@ -463,37 +830,68 @@ prab dan tedd turut dimasukkan ke zona `.5` meski tidak diminta soal, agar zona 
 
 ---
 
-## Soal 9 — Web Statis dan Autoindex
+## Soal 9: Web Statis dan Autoindex
 
-> Jalankan layanan web statis pada hostname di node area vault menggunakan Apache. Buka folder `/arsip/` dan aktifkan autoindex sehingga daftar file dapat ditelusuri dari browser. Akses pengujian harus melalui hostname, bukan IP address.
+> Jalankan layanan web statis pada hostname di node area vault (menggunakan apache). Buka folder direktori `/arsip/` dan aktifkan fitur autoindex (directory listing) pada konfigurasi Apache sehingga seluruh daftar file di dalamnya dapat ditelusuri langsung dari browser. Akses pengujian harus dilakukan melalui hostname, bukan IP address.
 
 > **Koreksi soal.** Naskah soal menyebut "aktifkan fitur autoindex pada konfigurasi Nginx". Asisten (rootkids) mengoreksi hal ini di Discord: *"sorry pake apache yaa, belom diganti hehe"*. Pengerjaan menggunakan **Apache**.
 
-### Pengerjaan
+### Langkah Pengerjaan
 
-Area vault terdiri dari obladi dan desmond, dan keduanya dikonfigurasi.
+**1. Menulis `/root/setup-web.sh` yang generik,** membaca hostname node sendiri sehingga perintah yang dijalankan di obladi dan desmond identik.
 
-**obladi dan desmond** — [`config/web/setup-web.sh`](config/web/setup-web.sh)
+**2. Menjalankan script di kedua node area vault.**
+
+**3. Menguji melalui hostname** menggunakan `curl` dan `lynx`, bukan melalui alamat IP.
+
+### Script dan Konfigurasi
+
+**obladi dan desmond** - `/root/setup-web.sh` - [`config/web/setup-web.sh`](config/web/setup-web.sh)
+
+```bash
+#!/bin/bash
+NAME=$(hostname -s)
+apt-get update -y
+apt-get install -y apache2
+
+mkdir -p /var/www/$NAME/arsip
+echo "<h1>Area Vault - $NAME</h1><p>Repositori web statis K68</p>" > /var/www/$NAME/index.html
+echo "catatan operasi the mesh" > /var/www/$NAME/arsip/catatan.txt
+echo "log akses gerbang penyaring" > /var/www/$NAME/arsip/log-gerbang.txt
+echo "daftar entitas the mesh" > /var/www/$NAME/arsip/entitas.txt
+
+cat > /etc/apache2/sites-available/$NAME.conf <<EOF
+<VirtualHost *:80>
+    ServerName $NAME.K68.com
+    ServerAlias vault.K68.com
+    DocumentRoot /var/www/$NAME
+
+    <Directory /var/www/$NAME>
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    <Directory /var/www/$NAME/arsip>
+        Options +Indexes
+        AllowOverride None
+        Require all granted
+    </Directory>
+</VirtualHost>
+EOF
+
+a2dissite 000-default.conf
+a2ensite $NAME.conf
+service apache2 restart
+```
+
+Hasil akhir konfigurasi di kedua node:
 
 ![Config obladi](screenshot/soal09-config-obladi.png)
 
 ![Config desmond](screenshot/soal09-config-desmond.png)
 
-Script dibuat generik dengan membaca hostname node sendiri, sehingga perintah yang dijalankan di kedua node identik dan menghasilkan `ServerName` yang berbeda secara otomatis.
-
-Kunci soal ini terletak pada pemisahan dua blok `Directory`:
-
-```apache
-<Directory /var/www/obladi>
-    Options -Indexes
-</Directory>
-
-<Directory /var/www/obladi/arsip>
-    Options +Indexes
-</Directory>
-```
-
-Hanya `/arsip` yang menampilkan daftar isi. Apabila `-Indexes` pada blok DocumentRoot terlewat, halaman utama pun ikut menampilkan daftar direktori, dan itu tidak sesuai permintaan soal.
+Kunci soal ini terletak pada pemisahan dua blok `Directory`. Hanya `/arsip` yang menampilkan daftar isi; apabila `-Indexes` pada blok DocumentRoot terlewat, halaman utama pun ikut menampilkan daftar direktori dan itu tidak sesuai permintaan soal.
 
 `ServerAlias vault.K68.com` ditambahkan agar kedua node juga menanggapi permintaan yang datang atas nama areanya, yang diperlukan untuk reverse proxy pada soal 11.
 
@@ -516,11 +914,10 @@ Penelusuran dari browser menggunakan `lynx`:
 
 ![Lynx desmond](screenshot/soal09-lynx-arsip-desmond.png)
 
-Daftar berkas tampil sebagai tautan yang dapat dibuka, dan footer Apache menunjukkan server yang melayani adalah `obladi.k68.com` dan `desmond.k68.com` — bukan alamat IP.
+Daftar berkas tampil sebagai tautan yang dapat dibuka, dan footer Apache menunjukkan server yang melayani adalah `obladi.k68.com` dan `desmond.k68.com` - bukan alamat IP.
 
 ---
-
-## Soal 10 — Web Dinamis dan Rewrite URL
+## Soal 10: Web Dinamis dan Rewrite URL
 
 > Jalankan layanan web dinamis (PHP-FPM) pada hostname di node core (menggunakan nginx). Buat sebuah aplikasi sederhana yang memuat halaman beranda dan halaman profil. Terapkan aturan rewrite pada server sehingga akses ke /profil dapat berfungsi dengan URL bersih (tanpa akhiran .php). Akses pengujian wajib dilakukan melalui hostname.
 
@@ -544,7 +941,7 @@ Ketika klien meminta `/profil`, Nginx terlebih dahulu memeriksa apakah ada berka
 
 Seluruh konfigurasi dibungkus dalam script di `/root/setup-core.sh` yang bersifat generik dengan membaca `$(hostname -s)`, sehingga isi script identik di oblada maupun molly.
 
-**oblada dan molly** — [`config/core/setup-core.sh`](config/core/setup-core.sh)
+**oblada dan molly** - [`config/core/setup-core.sh`](config/core/setup-core.sh)
 
 ```bash
 #!/bin/bash
@@ -622,7 +1019,7 @@ service nginx restart
 
 ---
 
-## Soal 11 — Reverse Proxy dan Load Balancer
+## Soal 11: Reverse Proxy dan Load Balancer
 
 > Konfigurasikan Penny (menggunakan Apache) sebagai reverse proxy yang mengarah ke semua node di area vault (Obladi & Desmond). Sementara itu, konfigurasikan Abbey (menggunakan Nginx) sebagai reverse proxy menuju area core (Oblada & Molly). Pastikan kedua gerbang ini meneruskan identitas asli pengunjung ke server backend dengan melakukan forwarding header Host dan X-Real-IP. Buktikan bahwa Penny dan Abbey berhasil mendistribusikan lalu lintas dengan tepat.
 
@@ -630,12 +1027,12 @@ service nginx restart
 
 Dua gerbang penyaring dikonfigurasi sebagai reverse proxy dan load balancer menggunakan dua teknologi web server berbeda:
 
-1. **Penny (`192.245.4.2`) — Apache Reverse Proxy:**
+1. **Penny (`192.245.4.2`) - Apache Reverse Proxy:**
    Menggunakan modul Apache: `proxy`, `proxy_http`, `proxy_balancer`, `lbmethod_byrequests`, dan `headers`.
    - Mengelompokkan backend area vault (`http://192.245.5.4:80` dan `http://192.245.5.5:80`) ke dalam satu cluster load balancer dengan metode `byrequests` (round-robin).
    - Meneruskan header identitas asli pengunjung dengan `ProxyPreserveHost On` (header `Host`) dan `RequestHeader set X-Real-IP %{REMOTE_ADDR}s` (header `X-Real-IP`).
 
-2. **Abbey (`192.245.3.2`) — Nginx Reverse Proxy:**
+2. **Abbey (`192.245.3.2`) - Nginx Reverse Proxy:**
    Menggunakan blok `upstream core_backend` yang mengarah ke `192.245.5.6:80` (oblada) dan `192.245.5.7:80` (molly).
    - Nginx mendistribusikan beban secara default menggunakan round-robin.
    - Meneruskan identitas pengunjung melalui:
@@ -645,7 +1042,7 @@ Dua gerbang penyaring dikonfigurasi sebagai reverse proxy dan load balancer meng
      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
      ```
 
-**Penny** — [`config/proxy/setup-penny.sh`](config/proxy/setup-penny.sh)
+**Penny** - [`config/proxy/setup-penny.sh`](config/proxy/setup-penny.sh)
 
 ```bash
 #!/bin/bash
@@ -676,7 +1073,7 @@ a2dissite 000-default.conf
 service apache2 restart
 ```
 
-**Abbey** — [`config/proxy/setup-abbey.sh`](config/proxy/setup-abbey.sh)
+**Abbey** - [`config/proxy/setup-abbey.sh`](config/proxy/setup-abbey.sh)
 
 ```bash
 #!/bin/bash
@@ -709,11 +1106,11 @@ service nginx restart
 
 ![Soal 11 Penny](screenshot/Soal%2011%20Vault%20Penny.png)
 
-![Soal 11 Abbey](screenshot/soal%2011%20Abbey.png)
+![Soal 11 Abbey](screenshot/Soal%2011%20Abbey.png)
 
 ---
 
-## Soal 12 — Basic Authentication
+## Soal 12: Basic Authentication
 
 > Terdapat ruang khusus di penny yang yang menyimpan dokumen rahasia sindikat, oleh karena itu terapkan perlindungan basic authentication untuk path `/admin`. Akses ke jalur tersebut harus menolak pengunjung tanpa kredensial, dan hanya mengizinkan masuk jika menggunakan credential berikut:
 > - Username: `prabs`
@@ -753,7 +1150,7 @@ Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau le
 
 ---
 
-## Soal 13 — Redirection
+## Soal 13: Redirection
 
 > Setiap entitas dari luar harus memanggil gerbang dengan nama kanoniknya. Jika ada yang mencoba mengakses IP penny dan domain `penny.K68.com`, paksa sistem untuk melakukan redirect secara permanen (status code 301) menuju `www.K68.com`. Sebaliknya, jika ada yang mengakses IP abbey dan domain `abbey.K68.com`, lakukan redirect sementara (status code 302) menuju `static.K68.com`.
 
@@ -761,7 +1158,7 @@ Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau le
 
 Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
 
-1.  **Penny (Apache) — Redirect 301 (Permanent):**
+1.  **Penny (Apache) - Redirect 301 (Permanent):**
     Di dalam `setup-penny.sh`, diaktifkan modul `rewrite`. Konfigurasi VirtualHost ditambahkan aturan `RewriteCond` dan `RewriteRule` untuk mendeteksi akses ke IP `192.245.4.2` atau domain `penny.K68.com`, lalu mengalihkannya ke `www.K68.com`.
     ```apache
     RewriteEngine On
@@ -770,7 +1167,7 @@ Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
     RewriteRule ^(.*)$ http://www.K68.com$1 [R=301,L]
     ```
 
-2.  **Abbey (Nginx) — Redirect 302 (Temporary):**
+2.  **Abbey (Nginx) - Redirect 302 (Temporary):**
     Di dalam `setup-abbey.sh`, pada blok `server`, ditambahkan kondisi `if` untuk memeriksa variabel `$host`. Jika *host* yang diminta adalah IP `192.245.3.2` atau domain `abbey.K68.com`, *request* langsung dikembalikan dengan status `302` menuju `static.K68.com` beserta URI aslinya.
     ```nginx
     if ($host = "abbey.K68.com") {
@@ -787,11 +1184,11 @@ Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
 
 ![Soal 13 Penny](screenshot/Soal%2013%20Penny.png)
 
-![Soal 13 Abbey](screenshot/soal%2013%20Abbey.png)
+![Soal 13 Abbey](screenshot/Soal%2013%20Abbey.png)
 
 ---
 
-## Soal 14 — Forwarding Real IP ke Access Log Backend
+## Soal 14: Forwarding Real IP ke Access Log Backend
 
 > Di dalam The Mesh, rekam jejak tidak boleh dipalsukan oleh sistem. Pastikan access log pada setiap server web di area vault maupun area core mencatat alamat IP asli milik client (pengunjung) yang diteruskan oleh gerbang, dan bukan mencatat IP dari Penny ataupun Abbey.
 
@@ -799,7 +1196,7 @@ Aturan *Redirection* (pengalihan HTTP) dikonfigurasi pada kedua *reverse proxy*:
 
 Secara bawaan, karena *request* dialirkan melalui *reverse proxy*, server *backend* akan mencatat IP milik *proxy* tersebut sebagai pengunjungnya. Karena Penny dan Abbey sudah diinstruksikan untuk meneruskan *header* IP asli klien (via `X-Real-IP`), server *backend* harus dikonfigurasi untuk membaca *header* tersebut dan mengganti *client IP* bawaannya dengan IP tersebut untuk keperluan *logging*.
 
-1.  **Area Vault (obladi & desmond) — Apache:**
+1.  **Area Vault (obladi & desmond) - Apache:**
     Pada node Apache di area vault, modul `remoteip` diaktifkan untuk menerjemahkan alamat klien secara otomatis berdasarkan header yang diteruskan oleh Penny (`192.245.4.2`).
     
     Perintah yang ditambahkan di `setup-web.sh`:
@@ -815,7 +1212,7 @@ Secara bawaan, karena *request* dialirkan melalui *reverse proxy*, server *backe
     sed -i 's/LogFormat "%h /LogFormat "%a /g' /etc/apache2/apache2.conf
     ```
 
-2.  **Area Core (oblada & molly) — Nginx:**
+2.  **Area Core (oblada & molly) - Nginx:**
     Nginx menggunakan modul *Real IP* (secara otomatis sudah ada di *build* bawaan Nginx) untuk membaca IP pengunjung yang diteruskan oleh Abbey (`192.245.3.2`).
     
     Baris berikut disematkan di dalam blok `server` pada konfigurasi Nginx di `setup-core.sh`:
@@ -832,11 +1229,11 @@ Setelah di-restart, baik Apache maupun Nginx akan mencatat IP yang ada di header
 
 ![Soal 14 Alpha Echo](screenshot/Soal%2014%20Alpha%20Echo.png)
 
-![Soal 14 Alpha Hasil](screenshot/soal%2014%20Alpha.png)
+![Soal 14 Alpha Hasil](screenshot/Soal%2014%20Alpha.png)
 
 ---
 
-## Soal 15 — Jalur Proxy Khusus
+## Soal 15: Jalur Proxy Khusus
 
 > Rootkit menginstruksikan pembuatan jalur proxy khusus yang berdiri sendiri. Pada penny buat reverse proxy untuk path `/eternal` yang menyajikan directory `/var/www/eternal`, dan pastikan path ini dapat mengeksekusi (rendering) file `php`. Pada abbey, buat jalur `/orion` yang menyajikan directory `/var/www/orion`, secara murni statis tanpa perlu rendering php.
 
@@ -844,7 +1241,7 @@ Setelah di-restart, baik Apache maupun Nginx akan mencatat IP yang ada di header
 
 Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka juga dapat menyajikan *file* lokal di _path_ tertentu (bersifat "berdiri sendiri" dari backend).
 
-1.  **Penny (Apache) — Jalur `/eternal` dengan PHP:**
+1.  **Penny (Apache) - Jalur `/eternal` dengan PHP:**
     - Karena menyajikan konten PHP, di dalam `setup-penny.sh` ditambahkan instalasi paket `php` dan `libapache2-mod-php`. Modul PHP diaktifkan via `a2enmod php8.2`.
     - Dibuat direktori `/var/www/eternal` beserta berkas `index.php` berisikan skrip pencatat waktu server.
     - Pada blok VirtualHost `www.K68.com`, akses menuju `/eternal` dikecualikan dari konfigurasi *proxy* (via `ProxyPass /eternal !`) dan diarahkan ke folder lokal menggunakan `Alias`:
@@ -857,7 +1254,7 @@ Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka
       </Directory>
       ```
 
-2.  **Abbey (Nginx) — Jalur `/orion` Murni Statis:**
+2.  **Abbey (Nginx) - Jalur `/orion` Murni Statis:**
     - Di dalam `setup-abbey.sh`, dibuat direktori `/var/www/orion` berisi `index.html` statis sederhana.
     - Pada blok `server` milik `static.K68.com`, ditambahkan *location block* sebelum instruksi *proxy pass*:
       ```nginx
@@ -874,23 +1271,23 @@ Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka
 
 ![Soal 15 Penny](screenshot/Soal%2015%20Penny.png)
 
-![Soal 15 Abbey](screenshot/soal%2015%20Abbey.png)
+![Soal 15 Abbey](screenshot/Soal%2015%20Abbey.png)
 
 ---
 
-## Soal 16 — Stress Test dengan ApacheBench
+## Soal 16: Stress Test dengan ApacheBench
 
 > Ketahanan gerbang The Mesh harus diuji untuk menghadapi bombardir permintaan. Salah satu Klien (misal: Alpha) bertugas melakukan stress test benchmark menggunakan ApacheBench. Lakukan 250 requests dengan tingkat konkurensi (concurrencies) 10 untuk masing-masing titik akhir: www.xxx.com dan static.xxx.com. Tampilkan rangkuman hasilnya.
 
 ### Pengerjaan
 
-Soal ini tidak memerlukan konfigurasi baru. ApacheBench (`ab`) sudah tersedia pada paket `apache2-utils`, dan seluruh layanan yang diuji — Penny sebagai reverse proxy `www.K68.com`, Abbey sebagai reverse proxy `static.K68.com`, beserta empat backend di area vault dan area core — sudah berdiri sejak soal 11.
+Soal ini tidak memerlukan konfigurasi baru. ApacheBench (`ab`) sudah tersedia pada paket `apache2-utils`, dan seluruh layanan yang diuji - Penny sebagai reverse proxy `www.K68.com`, Abbey sebagai reverse proxy `static.K68.com`, beserta empat backend di area vault dan area core - sudah berdiri sejak soal 11.
 
 Pengujian dijalankan dari **alpha** (`192.245.1.2`), salah satu klien sayap kiri yang tidak memikul peran server apa pun, sehingga trafik yang dibangkitkan melewati jalur penuh: subnet 1 → rootkit → subnet 4 (Penny) → subnet 5 (Obladi/Desmond), dan subnet 1 → rootkit → subnet 3 (Abbey) → subnet 5 (Oblada/Molly).
 
 Kedua endpoint diakses lewat **hostname kanonik**, bukan IP. Apabila diuji lewat `http://penny.K68.com/` atau IP `192.245.4.2`, Penny akan membalas **301 Moved Permanently** (soal 13) dan `ab` hanya akan mengukur kecepatan server mengembalikan redirect, bukan kecepatan layanan sesungguhnya. Hal serupa berlaku untuk Abbey dengan **302 Found** menuju `static.K68.com`.
 
-**alpha** — `/root/soal16.sh`
+**alpha** - `/root/soal16.sh`
 
 ```bash
 #!/bin/bash
@@ -973,7 +1370,7 @@ Transfer rate:          677.81 [Kbytes/sec] received
 
 Tiga hal yang muncul dari benchmark:
 
-**1. `Failed requests: 125` tanpa `-l`.** Sebelum `-l` ditambahkan, `ab` melaporkan `Failed requests: 125` dengan rincian `(Connect: 0, Receive: 0, Length: 125, Exceptions: 0)`. Angka itu muncul karena 125 dari 250 response memiliki panjang yang berbeda dari response pertama — konsekuensi dari load balancer yang menyajikan halaman dari dua backend dengan nama node berbeda panjang. Tidak ada request yang gagal konek maupun gagal menerima data. Dengan `-l`, angka itu menjadi `0`.
+**1. `Failed requests: 125` tanpa `-l`.** Sebelum `-l` ditambahkan, `ab` melaporkan `Failed requests: 125` dengan rincian `(Connect: 0, Receive: 0, Length: 125, Exceptions: 0)`. Angka itu muncul karena 125 dari 250 response memiliki panjang yang berbeda dari response pertama - konsekuensi dari load balancer yang menyajikan halaman dari dua backend dengan nama node berbeda panjang. Tidak ada request yang gagal konek maupun gagal menerima data. Dengan `-l`, angka itu menjadi `0`.
 
 **2. `Non-2xx responses: 124` pada `www.K68.com`.** Hampir setengah permintaan ke area vault menerima status non-2xx. Penyebabnya adalah `ProxyPreserveHost On` di Penny: backend Apache di area vault menerima `Host: www.K68.com`, sementara vhost di obladi dan desmond hanya mendaftarkan `ServerName <node>.K68.com` dan `ServerAlias vault.K68.com`. Permintaan dengan Host `www.K68.com` jatuh ke default vhost dan dilayani dengan status non-2xx. Endpoint `static.K68.com` tidak mengalami gejala ini.
 
@@ -982,7 +1379,7 @@ Tiga hal yang muncul dari benchmark:
 
 ---
 
-## Soal 17 — TXT Record untuk Klien Sayap Kiri dan Kanan
+## Soal 17: TXT Record untuk Klien Sayap Kiri dan Kanan
 
 > Tambahkan TXT record pada DNS untuk semua klien sayap kiri dan sayap kanan (Alpha, Beta, Gamma, Delta, Epsilon). Jika DNS di-query TXT terhadap nama domain mereka (contoh: alpha.<xxxx>.com), sistem harus mengembalikan teks berupa nama hostname mereka masing-masing (contoh: "alpha").
 
@@ -992,7 +1389,7 @@ Lima klien yang dimaksud adalah `alpha`, `beta`, `gamma` (sayap kiri) dan `delta
 
 Karena zona `K68.com` dikelola di **prab** sebagai master dan ditarik **tedd** sebagai slave, perubahan cukup dilakukan di prab. tedd akan menerima salinan barunya lewat zone transfer otomatis (notify + allow-transfer sejak soal 4), tanpa perlu disentuh manual.
 
-**prab** — [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+**prab** - [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
 
 Penambahan lima baris pada zona forward `K68.com`:
 
@@ -1066,17 +1463,17 @@ Keduanya mengembalikan `2026093004`, memastikan perubahan TXT benar-benar sudah 
 
 ---
 
-## Soal 18 — Perubahan A Record dan Verifikasi Tiga Fase TTL
+## Soal 18: Perubahan A Record dan Verifikasi Tiga Fase TTL
 
 > Ubah A record DNS milik abbey.xxx.com ke alamat IP yang fiktif (ubah secara random namun pastikan format IP valid). Naikkan nilai serial SOA di prab dan pastikan tedd ikut tersinkron. Tetapkan TTL sebesar 15 detik pada record yang relevan tersebut. Verifikasi momen yang terjadi pada tiga fase pencarian: sebelum perubahan terjadi (mengembalikan IP lama), saat perubahan baru saja terjadi dalam jeda 15 detik (masih IP lama karena cache), dan setelah batas waktu TTL habis (berubah ke IP fiktif yang baru).
 
 ### Pengerjaan
 
-Soal ini menyentuh tiga hal sekaligus: TTL pada record, sinkronisasi master–slave, dan perilaku cache di sisi klien. Ketiganya harus disiapkan sebelum pengujian, karena tanpa cache di antara klien dan prab, perubahan A record akan langsung terlihat dan fase "masih IP lama" tidak akan pernah muncul.
+Soal ini menyentuh tiga hal sekaligus: TTL pada record, sinkronisasi master-slave, dan perilaku cache di sisi klien. Ketiganya harus disiapkan sebelum pengujian, karena tanpa cache di antara klien dan prab, perubahan A record akan langsung terlihat dan fase "masih IP lama" tidak akan pernah muncul.
 
 **1. Caching resolver di klien.** Klien (`alpha`) dipasangi `dnsmasq` sebagai forwarder lokal. Query dari alpha tidak langsung ke prab, melainkan ke dnsmasq yang meneruskan ke prab/tedd dan menyimpan jawabannya di cache selama TTL record tersebut.
 
-**alpha** — `/etc/dnsmasq.conf`
+**alpha** - `/etc/dnsmasq.conf`
 
 ```conf
 port=53
@@ -1105,13 +1502,11 @@ Angka `15` mengesampingkan `$TTL` default zona (`604800`) hanya untuk record ter
 
 **3. Serial SOA dinaikkan setiap perubahan.** Setiap kali zona disunting, serial dinaikkan agar tedd menarik salinan baru lewat notify. Pada soal ini serial bergerak dari `2026093005` (saat TTL dipasang) ke `2026093006` (saat IP diganti).
 
-![Zona TTL 15](screenshot/soal18-zona-ttl.png)
-
 **Catatan demonstrasi.** Soal menyebut TTL 15 detik. Karena jeda antar-fase di dalam terminal melebihi 15 detik, cache di dnsmasq cenderung expired sebelum fase kedua sempat diambil. Untuk keperluan dokumentasi, TTL sementara dinaikkan menjadi **120 detik** saat pengambilan screenshot, dan dikembalikan ke **15 detik** setelah selesai, sesuai ketentuan soal.
 
 ### Pengujian
 
-**Fase 1 — Sebelum perubahan.**
+**Fase 1 - Sebelum perubahan.**
 
 Cache dnsmasq di-reset lebih dulu supaya kondisi bersih:
 
@@ -1126,9 +1521,9 @@ dig abbey.K68.com
 abbey.K68.com.    15    IN    A    192.245.3.2
 ```
 
-![Fase 1 — IP lama](screenshot/soal18-fase1-ip-lama.png)
+![Fase 1 - IP lama](screenshot/soal18-fase1-ip-lama.png)
 
-**Fase 2 — Dalam jendela TTL, cache masih IP lama.**
+**Fase 2 - Dalam jendela TTL, cache masih IP lama.**
 
 Di prab, A record abbey diubah ke alamat fiktif dan serial dinaikkan:
 
@@ -1159,7 +1554,7 @@ dig @192.245.5.2 abbey.K68.com +short
 
 Prab langsung mengembalikan `10.20.30.40` karena ia menjawab dari zona otoritatifnya, tanpa cache.
 
-**Fase 3 — Setelah TTL habis.**
+**Fase 3 - Setelah TTL habis.**
 
 Setelah jeda melewati batas TTL, cache dnsmasq expired dan query berikutnya diteruskan ulang ke prab:
 
@@ -1173,13 +1568,13 @@ Sekarang IP fiktif yang baru muncul:
 abbey.K68.com.    15    IN    A    10.20.30.40
 ```
 
-![Fase 3 — IP baru](screenshot/soal18-fase2-cache.png)
+![Fase 3 - IP baru](screenshot/soal18-fase2-cache.png)
 
 | Fase | Query | Hasil |
 |---|---|---|
 | 1. Sebelum perubahan | `dig abbey.K68.com` | `192.245.3.2` |
 | 2. Dalam jendela TTL | `dig abbey.K68.com` | `192.245.3.2` (dari cache) |
-| — pembanding | `dig @192.245.5.2 abbey.K68.com` | `10.20.30.40` (langsung dari master) |
+| - pembanding | `dig @192.245.5.2 abbey.K68.com` | `10.20.30.40` (langsung dari master) |
 | 3. Setelah TTL habis | `dig abbey.K68.com` | `10.20.30.40` |
 
 ### Sinkronisasi tedd
@@ -1205,15 +1600,15 @@ Keduanya harus mengembalikan serial yang sama. Setelah perubahan ke IP fiktif, k
 
 ---
 
-## Soal 19 — CNAME ke Domain Eksternal (http.badssl.com)
+## Soal 19: CNAME ke Domain Eksternal (http.badssl.com)
 
 > Last? But not least? Buat CNAME record yang melakukan binding dari domain internal outbound.xxx.com menuju domain eksternal http.badssl.com. Lakukan perintah curl ke http://outbound.xxx.com dan pastikan output yang dihasilkan sesuai dengan isi konten di halaman http.badssl.com.
 
 ### Pengerjaan
 
-Soal ini menggabungkan DNS internal dengan DNS eksternal. CNAME `outbound.K68.com` diarahkan ke `http.badssl.com.` — domain nyata di internet. Ketika klien meminta `outbound.K68.com`, resolver menelusuri CNAME tersebut, lalu melanjutkan query ke DNS publik untuk mencari A record `http.badssl.com`.
+Soal ini menggabungkan DNS internal dengan DNS eksternal. CNAME `outbound.K68.com` diarahkan ke `http.badssl.com.` - domain nyata di internet. Ketika klien meminta `outbound.K68.com`, resolver menelusuri CNAME tersebut, lalu melanjutkan query ke DNS publik untuk mencari A record `http.badssl.com`.
 
-**prab** — [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+**prab** - [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
 
 Satu baris ditambahkan pada zona forward `K68.com`:
 
@@ -1221,7 +1616,7 @@ Satu baris ditambahkan pada zona forward `K68.com`:
 outbound    IN  CNAME   http.badssl.com.
 ```
 
-Titik di akhir `http.badssl.com.` bersifat wajib. Tanpa titik, BIND memperlakukan nilainya sebagai nama relatif dan menambahkan nama zona di belakangnya, sehingga menjadi `http.badssl.com.K68.com.` — dan query akan gagal.
+Titik di akhir `http.badssl.com.` bersifat wajib. Tanpa titik, BIND memperlakukan nilainya sebagai nama relatif dan menambahkan nama zona di belakangnya, sehingga menjadi `http.badssl.com.K68.com.` - dan query akan gagal.
 
 Serial SOA dinaikkan, lalu BIND dimuat ulang:
 
@@ -1239,7 +1634,7 @@ service bind9 restart
 dig outbound.K68.com
 ```
 
-`ANSWER SECTION` menampilkan dua baris berurutan — CNAME yang menjembatani ke domain eksternal, dan A record hasil resolusi domain itu:
+`ANSWER SECTION` menampilkan dua baris berurutan - CNAME yang menjembatani ke domain eksternal, dan A record hasil resolusi domain itu:
 
 ```
 outbound.K68.com.  604800  IN  CNAME   http.badssl.com.
@@ -1272,13 +1667,13 @@ Hasil pemeriksaan isi kedua berkas menunjukkan hal yang berbeda:
 
 ![Curl blocked](screenshot/soal19-curl-blocked.png)
 
-Permintaan lewat `outbound.K68.com` dikembalikan halaman "Web Page Blocked", sedangkan permintaan langsung ke `http.badssl.com` mengembalikan halaman aslinya. Perbedaan ini bukan berasal dari DNS — `dig` sudah membuktikan CNAME bekerja dan A record `http.badssl.com` terisi dengan benar. Yang membedakan adalah **Host header** yang dikirim klien: `outbound.K68.com` adalah hostname yang tidak dikenal jaringan publik, sehingga network filter di jalur internet (kemungkinan besar di sisi ITS atau upstream) mengintersepsi permintaan dan mengembalikan halaman blokir.
+Permintaan lewat `outbound.K68.com` dikembalikan halaman "Web Page Blocked", sedangkan permintaan langsung ke `http.badssl.com` mengembalikan halaman aslinya. Perbedaan ini bukan berasal dari DNS - `dig` sudah membuktikan CNAME bekerja dan A record `http.badssl.com` terisi dengan benar. Yang membedakan adalah **Host header** yang dikirim klien: `outbound.K68.com` adalah hostname yang tidak dikenal jaringan publik, sehingga network filter di jalur internet (kemungkinan besar di sisi ITS atau upstream) mengintersepsi permintaan dan mengembalikan halaman blokir.
 
 ### Catatan Temuan
 
 **1. CNAME bekerja pada lapisan DNS.** Bukti utama adalah output `dig outbound.K68.com` yang menampilkan CNAME ke `http.badssl.com.` beserta A record hasilnya. Ini persis yang diminta soal: binding dari domain internal ke domain eksternal.
 
-**2. Verifikasi HTTP terhalang network filter.** Respons "Web Page Blocked" berasal dari pihak ketiga di luar Mesh. Filter tersebut membedakan permintaan berdasarkan Host header, bukan berdasarkan IP tujuan — terbukti karena `curl http://http.badssl.com/` dari klien yang sama berhasil mengembalikan halaman badssl.com dengan benar, sementara `curl http://outbound.K68.com/` diblokir. Keduanya menuju IP `104.154.89.105` yang sama.
+**2. Verifikasi HTTP terhalang network filter.** Respons "Web Page Blocked" berasal dari pihak ketiga di luar Mesh. Filter tersebut membedakan permintaan berdasarkan Host header, bukan berdasarkan IP tujuan - terbukti karena `curl http://http.badssl.com/` dari klien yang sama berhasil mengembalikan halaman badssl.com dengan benar, sementara `curl http://outbound.K68.com/` diblokir. Keduanya menuju IP `104.154.89.105` yang sama.
 
 **3. Titik di akhir CNAME menentukan hasil.** `http.badssl.com.` (dengan titik) adalah FQDN absolut; `http.badssl.com` (tanpa titik) akan dibaca sebagai `http.badssl.com.K68.com.` dan query gagal. Ini pola yang sama dengan CNAME `www` dan `static` pada soal 7.
 
@@ -1286,7 +1681,7 @@ Permintaan lewat `outbound.K68.com` dikembalikan halaman "Web Page Blocked", sed
 
 ---
 
-## Soal 20 — Autostart Service dan Konfigurasi Setelah Restart
+## Soal 20: Autostart Service dan Konfigurasi Setelah Restart
 
 > Setelah semua penyelesaian selesai, pastikan semua service dan konfigurasi yang telah dikerjakan dari awal tetap berjalan normal dan berstatus autostart saat node di-restart (khusus untuk kasus ini, abaikan konfigurasi nomor 18 dan biarkan koordinat kembali normal).
 
@@ -1296,7 +1691,7 @@ Soal ini menjawab kendala utama lingkungan praktikum: pada image `ardhptr21/debi
 
 Solusinya adalah **script bootstrap** di `/root/start-all.sh` yang dipanggil otomatis oleh `/etc/network/interfaces` melalui baris `up`. Script ini bersifat generik: ia membaca `hostname -s` dan menjalankan script setup yang sesuai untuk node tersebut.
 
-**Semua node** — `/root/start-all.sh`
+**Semua node** - `/root/start-all.sh`
 
 ```bash
 #!/bin/bash
@@ -1337,7 +1732,7 @@ esac
 echo "=== [$(date)] Selesai $NODE ===" >> $LOG
 ```
 
-**Setiap node** — `/etc/network/interfaces` (baris terakhir pada blok `iface`)
+**Setiap node** - `/etc/network/interfaces` (baris terakhir pada blok `iface`)
 
 ```
     up bash /root/start-all.sh
@@ -1345,7 +1740,7 @@ echo "=== [$(date)] Selesai $NODE ===" >> $LOG
 
 Baris `up` inilah yang membuat script dijalankan otomatis setiap interface naik setelah boot. Sebelumnya baris ini berisi `up bash /root/dns.sh`; diganti agar bootstrap lengkap berjalan sekali jalan.
 
-Untuk `rootkit`, baris `up` hanya dipasang pada `eth1`, bukan pada seluruh `eth1`–`eth5`. Bila dipasang di semua interface, `start-all.sh` akan dieksekusi lima kali setiap boot dan menimbulkan duplikasi aturan `MASQUERADE` di iptables.
+Untuk `rootkit`, baris `up` hanya dipasang pada `eth1`, bukan pada seluruh `eth1`-`eth5`. Bila dipasang di semua interface, `start-all.sh` akan dieksekusi lima kali setiap boot dan menimbulkan duplikasi aturan `MASQUERADE` di iptables.
 
 Tiga hal yang dipastikan sebelum bootstrap diuji:
 
@@ -1425,7 +1820,16 @@ Hasil yang diharapkan:
 
 **1. `ip_forward` dan `iptables` tidak persist setelah reboot.** Keduanya harus dipasang ulang setiap kali node hidup. `nat.sh` di rootkit melakukan ini lewat `start-all.sh`. Tanpa NAT aktif, klien di dalam Mesh tidak bisa menjangkau internet, dan seluruh `apt-get install` yang dijalankan script setup akan gagal.
 
-**2. `hostname -I` tidak tersedia pada BusyBox.** Pada percobaan awal, `dns.sh` memakai `hostname -I` untuk mengambil alamat IP node sendiri. Image Debinet memakai BusyBox sebagai `hostname`, dan BusyBox tidak mendukung flag `-I`. Akibatnya bagian `/etc/hosts` yang ditulis `dns.sh` tidak terisi. Penggantinya adalah `ip -4 addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1` yang portabel di BusyBox maupun coreutils.
+**2. `hostname -I` tidak tersedia pada BusyBox saat boot.** Pada `dns.sh` versi pertama, alamat IP node diambil dengan `hostname -I`. Perintah ini berhasil ketika script dijalankan manual dari konsol, sehingga tidak ketahuan sampai soal 20 memindahkan pemanggilannya ke proses boot. Pada konteks boot, `PATH` yang berlaku minimal dan `hostname` menunjuk ke BusyBox yang tidak mendukung flag `-I`. Jejaknya terekam di `/root/startup.log`:
+
+```
+hostname: invalid option -- 'I'
+BusyBox v1.36.1 (Ubuntu 1:1.36.1-6ubuntu3.1) multi-call binary.
+```
+
+Akibatnya variabel `IP` kosong dan baris yang ditulis ke `/etc/hosts` menjadi cacat - hanya ` nama.K68.com nama` tanpa alamat - sehingga `hostname -f` gagal pada setiap node setelah restart.
+
+Perbaikannya dua lapis pada [`config/dns.sh`](config/dns.sh): alamat diambil dengan `ip -4 addr show eth0 | awk '/inet /{print $2}' | cut -d/ -f1` yang tersedia di BusyBox maupun coreutils, dan ditambahkan penjaga `if [ -n "$IP" ]` sehingga baris cacat tidak pernah ditulis sekalipun pengambilan alamat gagal. Script yang sudah diperbaiki dipasang ulang ke seluruh 13 node non-router, lalu diverifikasi dengan restart.
 
 **3. `iptables -A` menumpuk rule setiap kali `nat.sh` dijalankan.** Karena `nat.sh` dipanggil setiap boot, rule `MASQUERADE` yang ditulis dengan `-A` bertambah satu setiap restart. Perbaikannya memakai `-C` (check) sebelum `-A`:
 
@@ -1446,6 +1850,7 @@ Dengan pola ini, rule hanya ditambahkan apabila belum ada, sehingga idempotent.
 .
 ├── README.md
 ├── config/
+│   ├── start-all.sh              # bootstrap semua node, dipanggil dari interfaces (soal 20)
 │   ├── dns.sh                    # resolver + /etc/hosts, identik di 13 node non-router
 │   ├── interfaces/               # /etc/network/interfaces seluruh node
 │   ├── rootkit/
@@ -1454,18 +1859,28 @@ Dengan pola ini, rule hanya ditambahkan apabila belum ada, sehingga idempotent.
 │   │   └── hostname.sh           # FQDN rootkit di /etc/hosts
 │   ├── prab/setup-dns.sh         # BIND master: zona forward + 3 reverse
 │   ├── tedd/setup-dns.sh         # BIND slave
-│   └── web/setup-web.sh          # Apache, identik di obladi dan desmond
-└── screenshot/                   # bukti pengerjaan soal 1-9
+│   ├── web/setup-web.sh          # Apache statis, identik di obladi dan desmond
+│   ├── core/setup-core.sh        # Nginx + PHP-FPM, identik di oblada dan molly
+│   └── proxy/
+│       ├── setup-penny.sh        # Apache reverse proxy + load balancer ke area vault
+│       └── setup-abbey.sh        # Nginx reverse proxy + load balancer ke area core
+└── screenshot/                   # bukti pengerjaan soal 1-20
 ```
 
 ### Letak script di dalam node
 
-| Script | Node | Path | Dipanggil dari |
-|---|---|---|---|
-| `nat.sh` | rootkit | `/root/nat.sh` | `up` di `interfaces` |
-| `hostname.sh` | rootkit | `/root/hostname.sh` | `up` di `interfaces` |
-| `dns.sh` | 13 node non-router | `/root/dns.sh` | `up` di `interfaces` |
-| `setup-dns.sh` | prab, tedd | `/root/setup-dns.sh` | manual |
-| `setup-web.sh` | obladi, desmond | `/root/setup-web.sh` | manual |
+Seluruh script diletakkan di `/root` karena hanya direktori itu dan `/etc/network/interfaces` yang bertahan saat node di-restart.
 
-`setup-dns.sh` dan `setup-web.sh` belum dipasang pemanggilan otomatisnya karena persistensi service setelah restart merupakan lingkup soal 20.
+| Script | Node | Path di node |
+|---|---|---|
+| `start-all.sh` | semua node kecuali NAT dan switch | `/root/start-all.sh` |
+| `dns.sh` | 13 node non-router | `/root/dns.sh` |
+| `nat.sh` | rootkit | `/root/nat.sh` |
+| `hostname.sh` | rootkit | `/root/hostname.sh` |
+| `setup-dns.sh` | prab, tedd | `/root/setup-dns.sh` |
+| `setup-web.sh` | obladi, desmond | `/root/setup-web.sh` |
+| `setup-core.sh` | oblada, molly | `/root/setup-core.sh` |
+| `setup-penny.sh` | penny | `/root/setup-penny.sh` |
+| `setup-abbey.sh` | abbey | `/root/setup-abbey.sh` |
+
+Satu-satunya script yang dipanggil langsung oleh `/etc/network/interfaces` adalah `start-all.sh`. Script lainnya dipanggil olehnya sesuai hostname node, sehingga seluruh konfigurasi dari soal 1 sampai 19 bangkit kembali secara otomatis setiap node dinyalakan ulang.

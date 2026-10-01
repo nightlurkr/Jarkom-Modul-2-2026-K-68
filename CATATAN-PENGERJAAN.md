@@ -198,3 +198,52 @@ File interfaces siap tempel: config/soal1-interfaces/
 - GOTCHA: hanya /root dan /etc/network/interfaces yang bertahan saat node restart. Semua config lain harus ditulis ulang oleh script di /root.
 - Pembagian: Ryan soal 1-9, Made Gde Krisna Wangsa soal 10-20
 - Repo laporan: Jarkom-Modul-2-2026-K-68
+
+---
+
+## TEMUAN SAAT REVIEW BAGIAN SOAL 10-20 (untuk Made)
+
+Ditemukan saat Ryan mengecek repo. Semuanya di wilayah soal 10-20, bukan soal 1-9.
+
+### 1. setup-penny.sh - ServerName rusak (PALING SERIUS)
+Di /root/setup-penny.sh, VirtualHost kedua berisi:
+    ServerName [www.K68.com](https://www.K68.com)
+Itu sintaks link Markdown yang ikut tercopy ke file config Apache.
+Akibatnya VirtualHost itu tidak pernah cocok dengan permintaan ke www.K68.com,
+sehingga Apache jatuh ke VirtualHost pertama yang isinya Redirect permanent ke www.K68.com.
+Blok proxy, /admin, dan /eternal semuanya ada di VirtualHost kedua itu.
+PERBAIKAN: ganti jadi  ServerName www.K68.com  lalu jalankan ulang scriptnya.
+BUKTI: curl -sI http://www.K68.com/ dan http://penny.K68.com/ dari alpha tidak
+mengembalikan apa pun (penny tidak merespons).
+
+### 2. setup-penny.sh - modul php salah versi
+Baris a2enmod memuat php8.2, padahal yang terpasang php8.4.
+Log boot: "ERROR: Module php8.2 does not exist!"
+Kemungkinan tidak fatal karena php8.4 diaktifkan otomatis saat paket dipasang,
+tapi perlu diuji ulang setelah ServerName dibetulkan (soal 15, /eternal harus merender PHP).
+
+### 3. setup-abbey.sh - dua karakter nyasar
+File diawali "kk#!/bin/bash". Shebang tidak terbaca kalau script dieksekusi langsung.
+Di repo sudah dihapus; di node masih ada.
+
+### 4. Bukti soal 20 belum lengkap
+- Tabel pengujian soal 20 di README tidak menyebut penny maupun abbey
+- Belum ada screenshot startup.log + status service untuk abbey
+- penny SUDAH terbukti: log boot berakhir "apache2 is running."
+- Screenshot end-to-end lama tidak sah: perintahnya "curl -I ... 2>&1 | head -3"
+  sehingga yang tertangkap progress meter curl, bukan header HTTP.
+  Pakai "curl -sI ... | head -5".
+
+### 5. Screenshot yang belum dipakai di README
+Soal 10 Install Apache.png, Soal 11 Setup Abbey.png, Soal 11 Setup Penny.png,
+soal16-ab-static2.png, soal17-dig-txt.png, soal20-abbey-reverted.png,
+soal20-restart-delta.png, soal20-rootkit-hostname.png, soal20-start-all.png
+
+### Yang sudah diperbaiki Ryan di repo
+- 4 rujukan gambar salah huruf besar-kecil (rusak di GitHub, tidak rusak di Windows)
+- 1 rujukan ke soal18-zona-ttl.png yang filenya tidak ada -> dihapus
+- config/ dilengkapi: start-all.sh, core/setup-core.sh, proxy/setup-penny.sh, proxy/setup-abbey.sh
+- config/dns.sh disinkronkan ke versi yang benar-benar terpasang
+- README soal 20 temuan #2 dikoreksi (sebelumnya mengklaim perbaikan hostname -I
+  sudah dipasang, padahal baru dipasang Ryan sore ini ke 13 node)
+- Bagian Struktur Repository diperbarui
