@@ -40,6 +40,11 @@ Laporan ini mencakup **soal 1 sampai 15**.
 - [Soal 13 — Redirection](#soal-13--Redirection)
 - [Soal 14 — Forwarding Real IP ke Access Log Backend](#soal-14--Forwarding-Real-IP-ke-Access-Log-Backend)
 - [Soal 15 — Jalur Proxy Khusus](#soal-15--Jalur-Proxy-Khusus)
+- [Soal 16 — Stress Test dengan ApacheBench](#soal-16--Stress-Test-dengan-ApacheBench)
+- [Soal 17 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-17--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
+- [Soal 18 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-18--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
+- [Soal 19 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-19--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
+- [Soal 20 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-20--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
 - [Struktur Repository](#struktur-repository)
 
 ---
@@ -866,6 +871,192 @@ Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka
 ![Soal 15 Penny](screenshot/Soal%2015%20Penny.png)
 
 ![Soal 15 Abbey](screenshot/soal%2015%20Abbey.png)
+
+---
+
+## Soal 16 — Stress Test dengan ApacheBench
+
+> Ketahanan gerbang The Mesh harus diuji untuk menghadapi bombardir permintaan. Salah satu Klien (misal: Alpha) bertugas melakukan stress test benchmark menggunakan ApacheBench. Lakukan 250 requests dengan tingkat konkurensi (concurrencies) 10 untuk masing-masing titik akhir: www.xxx.com dan static.xxx.com. Tampilkan rangkuman hasilnya.
+
+### Pengerjaan
+
+Soal ini tidak memerlukan konfigurasi baru. ApacheBench (`ab`) sudah tersedia pada paket `apache2-utils`, dan seluruh layanan yang diuji — Penny sebagai reverse proxy `www.K68.com`, Abbey sebagai reverse proxy `static.K68.com`, beserta empat backend di area vault dan area core — sudah berdiri sejak soal 11.
+
+Pengujian dijalankan dari **alpha** (`192.245.1.2`), salah satu klien sayap kiri yang tidak memikul peran server apa pun, sehingga trafik yang dibangkitkan melewati jalur penuh: subnet 1 → rootkit → subnet 4 (Penny) → subnet 5 (Obladi/Desmond), dan subnet 1 → rootkit → subnet 3 (Abbey) → subnet 5 (Oblada/Molly).
+
+Kedua endpoint diakses lewat **hostname kanonik**, bukan IP. Apabila diuji lewat `http://penny.K68.com/` atau IP `192.245.4.2`, Penny akan membalas **301 Moved Permanently** (soal 13) dan `ab` hanya akan mengukur kecepatan server mengembalikan redirect, bukan kecepatan layanan sesungguhnya. Hal serupa berlaku untuk Abbey dengan **302 Found** menuju `static.K68.com`.
+
+**alpha** — `/root/soal16.sh`
+
+```bash
+#!/bin/bash
+
+echo "=== Benchmark www.K68.com ==="
+ab -n 250 -c 10 -l http://www.K68.com/    | tee /root/ab-www.txt
+
+echo
+echo "=== Benchmark static.K68.com ==="
+ab -n 250 -c 10 -l http://static.K68.com/ | tee /root/ab-static.txt
+```
+
+Parameter yang dipakai:
+
+| Opsi | Arti |
+|---|---|
+| `-n 250` | total 250 permintaan per endpoint |
+| `-c 10` | 10 permintaan berjalan bersamaan (concurrency) |
+| `-l` | abaikan perbedaan panjang response antar backend |
+
+Opsi `-l` diperlukan karena kedua endpoint melewati load balancer: halaman yang disajikan obladi dan desmond (serta oblada dan molly) memuat nama node masing-masing, sehingga panjang HTML antar-backend tidak identik. Tanpa `-l`, `ab` menghitung setiap response yang panjangnya berbeda dari response pertama sebagai kegagalan, padahal semuanya dijawab dengan status 2xx.
+
+### Pengujian
+
+![Soal 16 www](screenshot/soal16-ab-www.png)
+
+![Soal 16 static](screenshot/soal16-ab-static.png)
+
+| Uji | Hasil |
+|---|---|
+| `ab -n 250 -c 10 -l http://www.K68.com/` | 250 selesai, 0 gagal |
+| `ab -n 250 -c 10 -l http://static.K68.com/` | 250 selesai, 0 gagal |
+
+Rangkuman `www.K68.com` (Penny → area vault):
+
+```text
+Server Software:        Apache/2.4.68
+Server Hostname:        www.K68.com
+Server Port:            80
+
+Document Path:          /
+Document Length:        Variable
+
+Concurrency Level:      10
+Time taken for tests:   0.126 seconds
+Complete requests:      250
+Failed requests:        0
+Non-2xx responses:      124
+Total transferred:      98726 bytes
+HTML transferred:       42138 bytes
+Requests per second:    1980.25 [#/sec] (mean)
+Time per request:       5.050 [ms] (mean)
+Time per request:       0.505 [ms] (mean, across all concurrent requests)
+Transfer rate:          763.68 [Kbytes/sec] received
+```
+
+Rangkuman `static.K68.com` (Abbey → area core):
+
+```text
+Server Software:        nginx
+Server Hostname:        static.K68.com
+Server Port:            80
+
+Document Path:          /
+Document Length:        Variable
+
+Concurrency Level:      10
+Time taken for tests:   0.142 seconds
+Complete requests:      250
+Failed requests:        0
+Total transferred:      98376 bytes
+HTML transferred:       65876 bytes
+Requests per second:    1763.84 [#/sec] (mean)
+Time per request:       5.669 [ms] (mean)
+Time per request:       0.550 [ms] (mean, across all concurrent requests)
+Transfer rate:          677.81 [Kbytes/sec] received
+```
+
+### Catatan Temuan
+
+Tiga hal yang muncul dari benchmark:
+
+**1. `Failed requests: 125` tanpa `-l`.** Sebelum `-l` ditambahkan, `ab` melaporkan `Failed requests: 125` dengan rincian `(Connect: 0, Receive: 0, Length: 125, Exceptions: 0)`. Angka itu muncul karena 125 dari 250 response memiliki panjang yang berbeda dari response pertama — konsekuensi dari load balancer yang menyajikan halaman dari dua backend dengan nama node berbeda panjang. Tidak ada request yang gagal konek maupun gagal menerima data. Dengan `-l`, angka itu menjadi `0`.
+
+**2. `Non-2xx responses: 124` pada `www.K68.com`.** Hampir setengah permintaan ke area vault menerima status non-2xx. Penyebabnya adalah `ProxyPreserveHost On` di Penny: backend Apache di area vault menerima `Host: www.K68.com`, sementara vhost di obladi dan desmond hanya mendaftarkan `ServerName <node>.K68.com` dan `ServerAlias vault.K68.com`. Permintaan dengan Host `www.K68.com` jatuh ke default vhost dan dilayani dengan status non-2xx. Endpoint `static.K68.com` tidak mengalami gejala ini.
+
+**3. Kedua endpoint menyelesaikan seluruh 250 request.** `Complete requests: 250` dan `Failed requests: 0` pada kedua endpoint menunjukkan tidak ada permintaan yang gagal diproses oleh load balancer. Angka `Length: 125` dan `Non-2xx: 124` yang mendekati setengah dari total justru konsisten dengan distribusi round-robin dua backend.
+
+
+---
+
+## Soal 17 — TXT Record untuk Klien Sayap Kiri dan Kanan
+
+> Tambahkan TXT record pada DNS untuk semua klien sayap kiri dan sayap kanan (Alpha, Beta, Gamma, Delta, Epsilon). Jika DNS di-query TXT terhadap nama domain mereka (contoh: alpha.<xxxx>.com), sistem harus mengembalikan teks berupa nama hostname mereka masing-masing (contoh: "alpha").
+
+### Pengerjaan
+
+Lima klien yang dimaksud adalah `alpha`, `beta`, `gamma` (sayap kiri) dan `delta`, `epsilon` (sayap kanan). Kelimanya sudah memiliki A record di zona `K68.com` sejak soal 5. Yang perlu ditambahkan sekarang adalah **TXT record** dengan nilai berupa nama pendek hostname masing-masing node.
+
+Karena zona `K68.com` dikelola di **prab** sebagai master dan ditarik **tedd** sebagai slave, perubahan cukup dilakukan di prab. tedd akan menerima salinan barunya lewat zone transfer otomatis (notify + allow-transfer sejak soal 4), tanpa perlu disentuh manual.
+
+**prab** — [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+
+Penambahan lima baris pada zona forward `K68.com`:
+
+```
+alpha   IN  A   192.245.1.2
+alpha   IN  TXT "alpha"
+beta    IN  A   192.245.1.3
+beta    IN  TXT "beta"
+gamma   IN  A   192.245.1.4
+gamma   IN  TXT "gamma"
+delta   IN  A   192.245.2.2
+delta   IN  TXT "delta"
+epsilon IN  A   192.245.2.3
+epsilon IN  TXT "epsilon"
+```
+
+Nilai TXT **wajib diapit tanda kutip ganda**. BIND memperlakukan string tanpa kutip sebagai token terpisah, dan hasilnya akan berupa error sintaks atau nilai yang terpecah.
+
+Serial SOA dinaikkan menjadi `2026093004` supaya tedd ikut menarik versi baru:
+
+```
+2026093004  ; Serial
+```
+
+Setelah file zona diperbarui, BIND di prab dimuat ulang:
+
+```bash
+service bind9 restart
+```
+
+### Pengujian
+
+![Zona TXT](screenshot/soal17-zona-txt.png)
+
+Verifikasi dilakukan dari dua klien yang berbeda untuk membuktikan master dan slave sama-sama melayani query TXT. Dipakai **alpha** (subnet 1) dan **delta** (subnet 2), keduanya mengarah ke prab dan tedd sebagai resolver.
+
+![Dig TXT alpha](screenshot/soal17-dig-txt-alpha.png)
+
+![Dig TXT delta](screenshot/soal17-dig-txt-delta.png)
+
+Perintah yang dijalankan:
+
+```bash
+dig @192.245.5.2 alpha.K68.com TXT +short
+dig @192.245.5.3 delta.K68.com TXT +short
+dig TXT alpha.K68.com +short
+dig TXT epsilon.K68.com +short
+```
+
+| Query | Hasil |
+|---|---|
+| `dig TXT alpha.K68.com +short` | `"alpha"` |
+| `dig TXT beta.K68.com +short` | `"beta"` |
+| `dig TXT gamma.K68.com +short` | `"gamma"` |
+| `dig TXT delta.K68.com +short` | `"delta"` |
+| `dig TXT epsilon.K68.com +short` | `"epsilon"` |
+| `dig @192.245.5.3 TXT alpha.K68.com +short` | `"alpha"` (dari slave, authoritative) |
+
+Nilai yang dikembalikan persis sama dengan nama pendek hostname masing-masing node. Query yang diarahkan langsung ke tedd (slave) mengembalikan jawaban identik, menandakan TXT record ikut tersalin lewat zone transfer bersama A record yang lain.
+
+Serial SOA di kedua server juga dapat dipastikan sudah sinkron:
+
+```bash
+dig @192.245.5.2 K68.com SOA +short
+dig @192.245.5.3 K68.com SOA +short
+```
+
+Keduanya mengembalikan `2026093004`, memastikan perubahan TXT benar-benar sudah sampai ke slave sebelum verifikasi dilakukan.
 
 ---
 
