@@ -42,9 +42,13 @@ Laporan ini mencakup **soal 1 sampai 15**.
 - [Soal 15 — Jalur Proxy Khusus](#soal-15--Jalur-Proxy-Khusus)
 - [Soal 16 — Stress Test dengan ApacheBench](#soal-16--Stress-Test-dengan-ApacheBench)
 - [Soal 17 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-17--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
-- [Soal 18 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-18--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
-- [Soal 19 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-19--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
-- [Soal 20 — TXT Record untuk Klien Sayap Kiri dan Kanan](#soal-20--TXT-Record-untuk-Klien-Sayap-Kiri-dan-Kanan)
+- [Soal 18 — Perubahan A Record dan Verifikasi Tiga Fase TTL
+](#soal-18--Perubahan-A-Record-dan-Verifikasi-Tiga-Fase-TTL
+)
+- [Soal 19 — CNAME ke Domain Eksternal http.badssl.com](#soal-19--CNAME-ke-Domain-Eksternal-http.badssl.com)
+- [Soal 20 — Autostart Service dan Konfigurasi Setelah Restart
+](#soal-20--Autostart-Service-dan-Konfigurasi-Setelah-Restart
+)
 - [Struktur Repository](#struktur-repository)
 
 ---
@@ -1025,7 +1029,9 @@ service bind9 restart
 
 Verifikasi dilakukan dari dua klien yang berbeda untuk membuktikan master dan slave sama-sama melayani query TXT. Dipakai **alpha** (subnet 1) dan **delta** (subnet 2), keduanya mengarah ke prab dan tedd sebagai resolver.
 
-![Dig TXT alpha](screenshot/soal17-dig-txt-alpha.png)
+![Dig TXT prab](screenshot/soal17-dig-txt-prab.png)
+
+![Dig TXT tedd](screenshot/soal17-dig-txt-tedd.png)
 
 ![Dig TXT delta](screenshot/soal17-dig-txt-delta.png)
 
@@ -1057,6 +1063,380 @@ dig @192.245.5.3 K68.com SOA +short
 ```
 
 Keduanya mengembalikan `2026093004`, memastikan perubahan TXT benar-benar sudah sampai ke slave sebelum verifikasi dilakukan.
+
+---
+
+## Soal 18 — Perubahan A Record dan Verifikasi Tiga Fase TTL
+
+> Ubah A record DNS milik abbey.xxx.com ke alamat IP yang fiktif (ubah secara random namun pastikan format IP valid). Naikkan nilai serial SOA di prab dan pastikan tedd ikut tersinkron. Tetapkan TTL sebesar 15 detik pada record yang relevan tersebut. Verifikasi momen yang terjadi pada tiga fase pencarian: sebelum perubahan terjadi (mengembalikan IP lama), saat perubahan baru saja terjadi dalam jeda 15 detik (masih IP lama karena cache), dan setelah batas waktu TTL habis (berubah ke IP fiktif yang baru).
+
+### Pengerjaan
+
+Soal ini menyentuh tiga hal sekaligus: TTL pada record, sinkronisasi master–slave, dan perilaku cache di sisi klien. Ketiganya harus disiapkan sebelum pengujian, karena tanpa cache di antara klien dan prab, perubahan A record akan langsung terlihat dan fase "masih IP lama" tidak akan pernah muncul.
+
+**1. Caching resolver di klien.** Klien (`alpha`) dipasangi `dnsmasq` sebagai forwarder lokal. Query dari alpha tidak langsung ke prab, melainkan ke dnsmasq yang meneruskan ke prab/tedd dan menyimpan jawabannya di cache selama TTL record tersebut.
+
+**alpha** — `/etc/dnsmasq.conf`
+
+```conf
+port=53
+listen-address=127.0.0.1
+bind-interfaces
+no-resolv
+server=192.245.5.2
+server=192.245.5.3
+cache-size=1000
+```
+
+Resolver alpha diarahkan ke dnsmasq:
+
+```bash
+echo "nameserver 127.0.0.1" > /etc/resolv.conf
+service dnsmasq restart
+```
+
+**2. TTL 15 detik pada record abbey.** Di file zona `K68.com` pada prab, A record abbey diberi TTL eksplisit:
+
+```
+abbey   15  IN  A   192.245.3.2
+```
+
+Angka `15` mengesampingkan `$TTL` default zona (`604800`) hanya untuk record tersebut.
+
+**3. Serial SOA dinaikkan setiap perubahan.** Setiap kali zona disunting, serial dinaikkan agar tedd menarik salinan baru lewat notify. Pada soal ini serial bergerak dari `2026093005` (saat TTL dipasang) ke `2026093006` (saat IP diganti).
+
+![Zona TTL 15](screenshot/soal18-zona-ttl.png)
+
+**Catatan demonstrasi.** Soal menyebut TTL 15 detik. Karena jeda antar-fase di dalam terminal melebihi 15 detik, cache di dnsmasq cenderung expired sebelum fase kedua sempat diambil. Untuk keperluan dokumentasi, TTL sementara dinaikkan menjadi **120 detik** saat pengambilan screenshot, dan dikembalikan ke **15 detik** setelah selesai, sesuai ketentuan soal.
+
+### Pengujian
+
+**Fase 1 — Sebelum perubahan.**
+
+Cache dnsmasq di-reset lebih dulu supaya kondisi bersih:
+
+```bash
+service dnsmasq restart
+dig abbey.K68.com
+```
+
+`ANSWER SECTION` menampilkan IP lama dengan TTL 15 (atau 120 pada mode demonstrasi):
+
+```
+abbey.K68.com.    15    IN    A    192.245.3.2
+```
+
+![Fase 1 — IP lama](screenshot/soal18-fase1-ip-lama.png)
+
+**Fase 2 — Dalam jendela TTL, cache masih IP lama.**
+
+Di prab, A record abbey diubah ke alamat fiktif dan serial dinaikkan:
+
+```
+abbey   15  IN  A   10.20.30.40
+```
+
+Serial menjadi `2026093006`. Setelah `service bind9 restart` di prab dan tedd ikut menarik salinan barunya, query dilakukan lagi dari alpha:
+
+```bash
+dig abbey.K68.com
+```
+
+Jawaban yang muncul **masih IP lama**, dengan TTL sisa di bawah nilai awal:
+
+```
+abbey.K68.com.    (ttl sisa)    IN    A    192.245.3.2
+```
+
+Ini membuktikan cache dnsmasq bekerja: perubahan di prab belum terlihat oleh klien karena TTL record belum habis.
+
+
+Untuk memastikan yang "menahan" IP lama adalah cache klien dan bukan zona di prab, query langsung ke prab dilakukan sebagai pembanding:
+
+```bash
+dig @192.245.5.2 abbey.K68.com +short
+```
+
+Prab langsung mengembalikan `10.20.30.40` karena ia menjawab dari zona otoritatifnya, tanpa cache.
+
+**Fase 3 — Setelah TTL habis.**
+
+Setelah jeda melewati batas TTL, cache dnsmasq expired dan query berikutnya diteruskan ulang ke prab:
+
+```bash
+dig abbey.K68.com
+```
+
+Sekarang IP fiktif yang baru muncul:
+
+```
+abbey.K68.com.    15    IN    A    10.20.30.40
+```
+
+![Fase 3 — IP baru](screenshot/soal18-fase2-cache.png)
+
+| Fase | Query | Hasil |
+|---|---|---|
+| 1. Sebelum perubahan | `dig abbey.K68.com` | `192.245.3.2` |
+| 2. Dalam jendela TTL | `dig abbey.K68.com` | `192.245.3.2` (dari cache) |
+| — pembanding | `dig @192.245.5.2 abbey.K68.com` | `10.20.30.40` (langsung dari master) |
+| 3. Setelah TTL habis | `dig abbey.K68.com` | `10.20.30.40` |
+
+### Sinkronisasi tedd
+
+Serial SOA di kedua server dicek sebelum dan sesudah perubahan:
+
+```bash
+dig @192.245.5.2 K68.com SOA +short
+dig @192.245.5.3 K68.com SOA +short
+```
+
+Keduanya harus mengembalikan serial yang sama. Setelah perubahan ke IP fiktif, keduanya menunjukkan `2026093006`, menandakan tedd berhasil menarik zona terbaru lewat notify dari prab.
+
+![Serial sinkron](screenshot/soal18-serial.png)
+
+### Catatan Temuan
+
+**1. Cache klien menentukan apakah fase 2 teramati.** Tanpa caching resolver di sisi klien, perubahan A record di prab akan langsung terlihat pada query berikutnya, dan fase "masih IP lama" tidak akan pernah muncul. dnsmasq di alpha menyediakan lapisan cache yang membuat fenomena TTL bisa didemonstrasikan.
+
+**2. TTL 15 detik terlalu pendek untuk dokumentasi manual.** Jeda antar-fase (edit zona → validasi → restart bind9 → tunggu tedd → screenshot) melebihi 15 detik, sehingga cache expired sebelum fase kedua sempat diambil. Untuk laporan ini, TTL sementara dinaikkan ke 120 detik saat pengambilan gambar, lalu dikembalikan ke 15 sesuai ketentuan soal.
+
+**3. Pembanding query langsung ke prab memperkuat kesimpulan.** Ketika `dig abbey.K68.com` masih mengembalikan IP lama, `dig @192.245.5.2 abbey.K68.com` sudah mengembalikan IP baru. Selisih inilah yang membuktikan bahwa sumber IP lama adalah cache klien, bukan zona di prab.
+
+---
+
+## Soal 19 — CNAME ke Domain Eksternal (http.badssl.com)
+
+> Last? But not least? Buat CNAME record yang melakukan binding dari domain internal outbound.xxx.com menuju domain eksternal http.badssl.com. Lakukan perintah curl ke http://outbound.xxx.com dan pastikan output yang dihasilkan sesuai dengan isi konten di halaman http.badssl.com.
+
+### Pengerjaan
+
+Soal ini menggabungkan DNS internal dengan DNS eksternal. CNAME `outbound.K68.com` diarahkan ke `http.badssl.com.` — domain nyata di internet. Ketika klien meminta `outbound.K68.com`, resolver menelusuri CNAME tersebut, lalu melanjutkan query ke DNS publik untuk mencari A record `http.badssl.com`.
+
+**prab** — [`config/prab/setup-dns.sh`](config/prab/setup-dns.sh)
+
+Satu baris ditambahkan pada zona forward `K68.com`:
+
+```
+outbound    IN  CNAME   http.badssl.com.
+```
+
+Titik di akhir `http.badssl.com.` bersifat wajib. Tanpa titik, BIND memperlakukan nilainya sebagai nama relatif dan menambahkan nama zona di belakangnya, sehingga menjadi `http.badssl.com.K68.com.` — dan query akan gagal.
+
+Serial SOA dinaikkan, lalu BIND dimuat ulang:
+
+```bash
+service bind9 restart
+```
+
+### Pengujian
+
+![Zona CNAME](screenshot/soal19-zona-cname.png)
+
+**1. Verifikasi CNAME dari klien.**
+
+```bash
+dig outbound.K68.com
+```
+
+`ANSWER SECTION` menampilkan dua baris berurutan — CNAME yang menjembatani ke domain eksternal, dan A record hasil resolusi domain itu:
+
+```
+outbound.K68.com.  604800  IN  CNAME   http.badssl.com.
+http.badssl.com.   60      IN  A       <IP badssl.com>
+```
+
+![Dig outbound](screenshot/soal19-dig-outbound.png)
+
+TTL pada baris `http.badssl.com` jauh lebih pendek dari 604800 karena nilainya berasal dari DNS publik, bukan dari zona `K68.com`. Ini mengonfirmasi bahwa jawaban CNAME berasal dari prab, sementara jawaban A record berasal dari resolver eksternal yang diteruskan lewat `forwarders { 192.168.122.1; }` (soal 4).
+
+**2. Sinkronisasi tedd.**
+
+Serial SOA di prab dan tedd dicek dan menunjukkan angka yang sama, memastikan slave menarik salinan zona terbaru lewat notify dari master.
+
+**3. Verifikasi konten lewat curl.**
+
+Di alpha, lakukan permintaan ke kedua alamat:
+
+```bash
+curl -s http://http.badssl.com/ > /tmp/direct.txt
+curl -s http://outbound.K68.com/ > /tmp/outbound.txt
+```
+
+Hasil pemeriksaan isi kedua berkas menunjukkan hal yang berbeda:
+
+| Permintaan | Respons |
+|---|---|
+| `curl http://http.badssl.com/` | Halaman badssl.com dengan `<style>body { background: red; }</style>` dan judul `<title>http.badssl.com</title>` |
+| `curl http://outbound.K68.com/` | Halaman **"Web Page Blocked"** dengan `<base href="/login/">` dan judul `<title>Web Page Blocked</title>` |
+
+![Curl blocked](screenshot/soal19-curl-blocked.png)
+
+Permintaan lewat `outbound.K68.com` dikembalikan halaman "Web Page Blocked", sedangkan permintaan langsung ke `http.badssl.com` mengembalikan halaman aslinya. Perbedaan ini bukan berasal dari DNS — `dig` sudah membuktikan CNAME bekerja dan A record `http.badssl.com` terisi dengan benar. Yang membedakan adalah **Host header** yang dikirim klien: `outbound.K68.com` adalah hostname yang tidak dikenal jaringan publik, sehingga network filter di jalur internet (kemungkinan besar di sisi ITS atau upstream) mengintersepsi permintaan dan mengembalikan halaman blokir.
+
+### Catatan Temuan
+
+**1. CNAME bekerja pada lapisan DNS.** Bukti utama adalah output `dig outbound.K68.com` yang menampilkan CNAME ke `http.badssl.com.` beserta A record hasilnya. Ini persis yang diminta soal: binding dari domain internal ke domain eksternal.
+
+**2. Verifikasi HTTP terhalang network filter.** Respons "Web Page Blocked" berasal dari pihak ketiga di luar Mesh. Filter tersebut membedakan permintaan berdasarkan Host header, bukan berdasarkan IP tujuan — terbukti karena `curl http://http.badssl.com/` dari klien yang sama berhasil mengembalikan halaman badssl.com dengan benar, sementara `curl http://outbound.K68.com/` diblokir. Keduanya menuju IP `104.154.89.105` yang sama.
+
+**3. Titik di akhir CNAME menentukan hasil.** `http.badssl.com.` (dengan titik) adalah FQDN absolut; `http.badssl.com` (tanpa titik) akan dibaca sebagai `http.badssl.com.K68.com.` dan query gagal. Ini pola yang sama dengan CNAME `www` dan `static` pada soal 7.
+
+**4. Forwarders di prab wajib aktif.** Klien hanya tahu prab dan tedd sebagai resolver. Ketika prab menerima query `outbound.K68.com`, ia menemukan CNAME ke `http.badssl.com` dan meneruskan query lanjutannya ke luar lewat `forwarders`. Tanpa forwarders, prab hanya bisa menjawab CNAME tanpa mengisi A record-nya.
+
+---
+
+## Soal 20 — Autostart Service dan Konfigurasi Setelah Restart
+
+> Setelah semua penyelesaian selesai, pastikan semua service dan konfigurasi yang telah dikerjakan dari awal tetap berjalan normal dan berstatus autostart saat node di-restart (khusus untuk kasus ini, abaikan konfigurasi nomor 18 dan biarkan koordinat kembali normal).
+
+### Pengerjaan
+
+Soal ini menjawab kendala utama lingkungan praktikum: pada image `ardhptr21/debinet`, hanya `/root` dan `/etc/network/interfaces` yang bertahan saat node dinyalakan ulang. Direktori `/etc/bind`, `/etc/apache2`, `/etc/nginx`, `/etc/resolv.conf`, dan status service semuanya hilang setiap restart. Tanpa penanganan khusus, semua konfigurasi dari soal 1 sampai 19 harus diketik ulang secara manual setiap sesi.
+
+Solusinya adalah **script bootstrap** di `/root/start-all.sh` yang dipanggil otomatis oleh `/etc/network/interfaces` melalui baris `up`. Script ini bersifat generik: ia membaca `hostname -s` dan menjalankan script setup yang sesuai untuk node tersebut.
+
+**Semua node** — `/root/start-all.sh`
+
+```bash
+#!/bin/bash
+
+NODE=$(hostname -s)
+LOG=/root/startup.log
+
+echo "=== [$(date)] Bootstrap $NODE ===" >> $LOG
+
+sleep 2
+
+if [ -f /root/dns.sh ]; then
+    bash /root/dns.sh >> $LOG 2>&1
+fi
+
+case "$NODE" in
+    rootkit)
+        [ -f /root/nat.sh ] && bash /root/nat.sh >> $LOG 2>&1
+        [ -f /root/hostname.sh ] && bash /root/hostname.sh >> $LOG 2>&1
+        ;;
+    prab|tedd)
+        [ -f /root/setup-dns.sh ] && bash /root/setup-dns.sh >> $LOG 2>&1
+        ;;
+    obladi|desmond)
+        [ -f /root/setup-web.sh ] && bash /root/setup-web.sh >> $LOG 2>&1
+        ;;
+    oblada|molly)
+        [ -f /root/setup-core.sh ] && bash /root/setup-core.sh >> $LOG 2>&1
+        ;;
+    penny)
+        [ -f /root/setup-penny.sh ] && bash /root/setup-penny.sh >> $LOG 2>&1
+        ;;
+    abbey)
+        [ -f /root/setup-abbey.sh ] && bash /root/setup-abbey.sh >> $LOG 2>&1
+        ;;
+esac
+
+echo "=== [$(date)] Selesai $NODE ===" >> $LOG
+```
+
+**Setiap node** — `/etc/network/interfaces` (baris terakhir pada blok `iface`)
+
+```
+    up bash /root/start-all.sh
+```
+
+Baris `up` inilah yang membuat script dijalankan otomatis setiap interface naik setelah boot. Sebelumnya baris ini berisi `up bash /root/dns.sh`; diganti agar bootstrap lengkap berjalan sekali jalan.
+
+Untuk `rootkit`, baris `up` hanya dipasang pada `eth1`, bukan pada seluruh `eth1`–`eth5`. Bila dipasang di semua interface, `start-all.sh` akan dieksekusi lima kali setiap boot dan menimbulkan duplikasi aturan `MASQUERADE` di iptables.
+
+Tiga hal yang dipastikan sebelum bootstrap diuji:
+
+| Aspek | Penanganan |
+|---|---|
+| Script setup idempotent | Setiap `setup-*.sh` memakai `cat >` (overwrite) untuk file config, bukan `>>` (append) |
+| `apt-get install` tidak prompt | Ditambahkan `export DEBIAN_FRONTEND=noninteractive` dan opsi `--force-confold` |
+| Service di-restart, bukan hanya di-start | Perintah diakhiri `service X restart` sehingga berlaku baik service sudah berjalan maupun belum |
+
+Serial SOA `abbey.K68.com` juga dikembalikan ke `192.245.3.2` seperti semula, sesuai perintah soal untuk "abaikan konfigurasi nomor 18 dan biarkan koordinat kembali normal".
+
+### Pengujian
+
+Restart diuji dengan menekan **Stop** lalu **Start** pada node di GNS3, bukan dengan `reboot` dari dalam. Hal ini penting karena `reboot` bisa meninggalkan sisa state di container, sedangkan stop-start mereproduksi kondisi "node baru dinyalakan" seperti sesi praktikum.
+
+Setelah node dinyalakan ulang, login dan cek:
+
+```bash
+cat /root/startup.log
+```
+
+Log harus memuat dua baris:
+
+```
+=== [tanggal waktu] Bootstrap <node> ===
+=== [tanggal waktu] Selesai <node> ===
+```
+
+![Log startup alpha](screenshot/soal20-restart-alpha.png)
+
+![Log startup rootkit](screenshot/soal20-restart-rootkit.png)
+
+| Uji | Hasil |
+|---|---|
+| `/root/startup.log` di alpha | Berisi `Bootstrap alpha` dan `Selesai alpha` |
+| `/root/startup.log` di delta | Berisi `Bootstrap delta` dan `Selesai delta` |
+| `cat /etc/resolv.conf` di alpha | Berisi prab, tedd, dan 192.168.122.1 |
+| `sysctl net.ipv4.ip_forward` di rootkit | `= 1` |
+| `iptables -t nat -L POSTROUTING -n -v` di rootkit | rule `MASQUERADE ... out:eth0` terpasang |
+| `service bind9 status` di prab | `bind9 is running` |
+| `service nginx status` di oblada | `nginx is running` |
+| `service php8.4-fpm status` di oblada | `php8.4-fpm is running` |
+
+Service di prab dan oblada setelah restart:
+
+![Restart prab](screenshot/soal20-restart-prab.png)
+
+![Restart oblada](screenshot/soal20-restart-oblada.png)
+
+**Uji end-to-end dari alpha.**
+
+Setelah node selesai restart, rangkaian perintah berikut dijalankan dari alpha tanpa intervensi manual apa pun:
+
+```bash
+cat /etc/resolv.conf
+dig www.K68.com +short
+dig static.K68.com +short
+curl -I http://www.K68.com/
+curl -I http://static.K68.com/
+curl -s http://static.K68.com/profil | head -5
+```
+
+Hasil yang diharapkan:
+
+| Perintah | Hasil |
+|---|---|
+| `cat /etc/resolv.conf` | prab, tedd, 192.168.122.1 terpasang |
+| `dig www.K68.com +short` | `192.245.4.2` |
+| `dig static.K68.com +short` | `192.245.3.2` |
+| `curl -I http://www.K68.com/` | `HTTP/1.1 200 OK` dari area vault |
+| `curl -I http://static.K68.com/` | `HTTP/1.1 200 OK` dari area core |
+| `curl -s http://static.K68.com/profil` | halaman profil dengan waktu server dinamis |
+
+![End-to-end](screenshot/soal20-end-to-end.png)
+
+### Catatan Temuan
+
+**1. `ip_forward` dan `iptables` tidak persist setelah reboot.** Keduanya harus dipasang ulang setiap kali node hidup. `nat.sh` di rootkit melakukan ini lewat `start-all.sh`. Tanpa NAT aktif, klien di dalam Mesh tidak bisa menjangkau internet, dan seluruh `apt-get install` yang dijalankan script setup akan gagal.
+
+**2. `hostname -I` tidak tersedia pada BusyBox.** Pada percobaan awal, `dns.sh` memakai `hostname -I` untuk mengambil alamat IP node sendiri. Image Debinet memakai BusyBox sebagai `hostname`, dan BusyBox tidak mendukung flag `-I`. Akibatnya bagian `/etc/hosts` yang ditulis `dns.sh` tidak terisi. Penggantinya adalah `ip -4 addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1` yang portabel di BusyBox maupun coreutils.
+
+**3. `iptables -A` menumpuk rule setiap kali `nat.sh` dijalankan.** Karena `nat.sh` dipanggil setiap boot, rule `MASQUERADE` yang ditulis dengan `-A` bertambah satu setiap restart. Perbaikannya memakai `-C` (check) sebelum `-A`:
+
+```bash
+iptables -t nat -C POSTROUTING -o eth0 -j MASQUERADE 2>/dev/null || \
+    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+```
+
+Dengan pola ini, rule hanya ditambahkan apabila belum ada, sehingga idempotent.
+
+**4. Urutan start tidak diatur oleh script.** Karena setiap node berdiri sendiri, prab bisa saja selesai lebih dulu dari rootkit, atau abbey lebih dulu dari tedd. Hal ini tidak bermasalah untuk jangka panjang, tetapi beberapa detik pertama setelah semua node boot, koneksi antar-node bisa gagal. Setelah semua node selesai menjalankan `start-all.sh`, jaringan kembali utuh.
 
 ---
 
