@@ -16,8 +16,6 @@
 | Ryan Adya Purwanto | 5027231046 | 1 - 9 |
 | Made Gde Krisna Wangsa | 5027201047 | 10 - 20 |
 
-Laporan ini mencakup **soal 1 sampai 15**.
-
 ---
 
 ## Daftar Isi
@@ -102,26 +100,7 @@ Switch2 dan Switch3 tidak tersambung ke rootkit melainkan ke Switch1. Karena swi
 
 `eth0` rootkit memakai DHCP dari NAT dan memperoleh `192.168.122.69/24`.
 
----
-
-## Catatan Teknis Penting
-
-Tiga kendala lingkungan yang menentukan cara seluruh konfigurasi ditulis.
-
-**1. Hanya `/root` dan `/etc/network/interfaces` yang bertahan saat node restart.**
-Node Docker kembali ke kondisi image setiap kali dinyalakan ulang. Akibatnya `/etc/bind`, `/etc/apache2`, dan `/etc/resolv.conf` akan hilang. Karena itu seluruh konfigurasi tidak diketik langsung ke lokasi aslinya, melainkan ditulis oleh **script yang disimpan di `/root`**, lalu script itu dipanggil dari `/etc/network/interfaces` melalui baris `up`. Pendekatan ini sekaligus memenuhi aturan praktikum yang mewajibkan script instalasi dan konfigurasi diletakkan di `/root`.
-
-**2. Editor "Edit network configuration" GNS3 membuang baris yang mengandung karakter `>`.**
-Karena itu perintah pengalihan output tidak boleh ditulis langsung di `interfaces`. Solusinya, perintah tersebut disembunyikan di dalam file script (`dns.sh`, `nat.sh`), dan `interfaces` hanya memanggilnya dengan `up bash /root/dns.sh`.
-
-**3. Jumlah adapter dinaikkan per node, bukan lewat template global.**
-`rootkit` memerlukan enam interface (`eth0`-`eth5`), sementara template default hanya menyediakan lebih sedikit. Karena praktikum berjalan di **remote controller yang dipakai bersama seluruh kelompok**, mengubah template global akan berdampak ke kelompok lain. Perubahan dilakukan lewat klik kanan node → Configure → Network → Adapters = 8, hanya pada `rootkit`.
-
----
-
 ## Soal 1: Topologi dan Pengalamatan IP
-
-> Sebagai pusat kesadaran The Mesh, rootkit harus merentangkan koneksinya ke lima gerbang utama (Switch). Tetapkan alamat IP dan default gateway untuk seluruh Entitas, mulai dari para operator (alpha, beta, gamma), penjaga directory (prab, tedd), gerbang penyaring (abbey, penny), hingga repository (obladi, desmond, oblada, molly) sesuai dengan topologi pembagian switch yang dirancang.
 
 ### Langkah Pengerjaan
 
@@ -129,10 +108,7 @@ Karena itu perintah pengalihan output tidak boleh ditulis langsung di `interface
 Empat belas node DebiNet, tujuh Ethernet switch, dan satu node NAT disusun sesuai gambar topologi.
 
 **2. Menaikkan jumlah adapter rootkit menjadi 8.**
-Dilakukan lewat klik kanan node → Configure → tab Network → Adapters, dalam keadaan node mati. Perubahan dilakukan **per node**, bukan lewat Edit → Preferences, karena template pada remote controller dipakai bersama seluruh kelompok.
-
-**3. Menyambung kabel berurutan dari `eth0` di sisi rootkit.**
-Nama interface di dalam node ditentukan oleh nomor slot adapter di GNS3. Kabel yang tertukar menghasilkan konfigurasi yang benar secara sintaks tetapi terpasang di jaringan yang salah.
+Dilakukan lewat klik kanan node → Configure → tab Network → Adapters, dalam keadaan node mati.
 
 | Port rootkit | Tujuan |
 |---|---|
@@ -143,7 +119,7 @@ Nama interface di dalam node ditentukan oleh nomor slot adapter di GNS3. Kabel y
 | eth4 | Switch5 |
 | eth5 | Switch1 |
 
-**4. Menulis konfigurasi IP** lewat klik kanan node → **Edit network configuration** (node dalam keadaan mati), yang mengedit `/etc/network/interfaces`.
+**3. Menulis konfigurasi IP** lewat klik kanan node → **Edit network configuration**, yang mengedit `/etc/network/interfaces`.
 
 ### Script dan Konfigurasi
 
@@ -178,8 +154,6 @@ iface eth5 inet static
 	address 192.245.5.1
 	netmask 255.255.255.0
 ```
-
-Interface `eth1`-`eth5` sengaja **tidak diberi baris `gateway`**. Default gateway hanya boleh ada satu per host, dan bagi router jalur keluarnya adalah `eth0` yang sudah memperolehnya otomatis dari DHCP NAT. Menambahkan gateway di interface LAN akan membuat router mengarahkan trafik keluar ke jaringan internalnya sendiri.
 
 **13 node non-router** - `/etc/network/interfaces` - [`config/interfaces/`](config/interfaces/)
 
@@ -217,16 +191,14 @@ iface eth0 inet static
 
 | Uji | Hasil |
 |---|---|
-| `ip a` di rootkit | eth1-eth5 memegang IP sesuai rancangan |
-| alpha → 192.245.1.1 | berhasil, gateway terjangkau |
-| alpha → beta | berhasil, komunikasi sesubnet |
-| prab → obladi | berhasil, membuktikan cascade Switch1-2-3 benar-benar satu subnet |
+| `ip a` di rootkit | eth1-eth5 mendapat IP sesuai rancangan |
+| alpha → 192.245.1.1 | berhasil, gateway |
+| alpha → beta | berhasil, satu subnet |
+| prab → obladi | berhasil, membuktikan Switch1-2-3 satu subnet |
 
 ---
 
 ## Soal 2: WAN dan NAT
-
-> Meskipun The Mesh beroperasi dalam bayang-bayang, Rootkit menyadari bahwa Entitas di dalamnya masih membutuhkan asupan paket dari dunia luar. Buka jalur menuju NAT dengan memastikan antarmuka WAN di router rootkit aktif. Konfigurasikan NAT agar dapat meneruskan lalu lintas keluar bagi seluruh alamat internal, sehingga semua host di dalam jaringan dapat menjangkau internet publik menggunakan IP address.
 
 ### Langkah Pengerjaan
 
@@ -234,7 +206,7 @@ iface eth0 inet static
 Diperiksa dengan `ip a show eth0`, memperoleh `192.168.122.69/24`.
 
 **2. Menulis script NAT di `/root/nat.sh`.**
-Diletakkan di `/root` karena hanya direktori itu dan `/etc/network/interfaces` yang bertahan saat node restart.
+Diletakkan di `/root`.
 
 **3. Menjalankan script dan memverifikasi aturan iptables.**
 
@@ -260,11 +232,7 @@ chmod +x /root/nat.sh
 bash /root/nat.sh
 ```
 
-`ip_forward` mengizinkan kernel meneruskan paket antar interface. Tanpa ini node hanya bisa berbicara dengan tetangga sesubnet.
-
-`MASQUERADE` dipilih daripada `SNAT` karena alamat `eth0` diperoleh lewat DHCP dan bisa berubah. `MASQUERADE` membaca alamat interface secara dinamis, sedangkan `SNAT` memerlukan alamat yang ditulis tetap.
-
-> Pada soal 20, baris `iptables -A` diganti menjadi pola `-C ... || -A` agar aturan tidak menumpuk setiap kali script dipanggil saat boot.
+`ip_forward` mengizinkan kernel meneruskan paket antar interface. Tanpa ini node hanya bisa berbicara dengan satu subnet.
 
 ### Pengujian
 
@@ -279,8 +247,6 @@ bash /root/nat.sh
 ---
 
 ## Soal 3: Routing Internal dan Resolver Awal
-
-> Jaringan rahasia tidak akan berfungsi tanpa sinkronisasi antar divisi. Pastikan seluruh Entitas dapat saling terhubung dan berkomunikasi lintas jalur (routing internal via rootkit berfungsi). Untuk menghindari fragmentasi saat persiapan, pastikan setiap host non-router menambahkan resolver 192.168.122.1 saat antarmukanya aktif agar akses untuk mengunduh paket instalasi dari internet tersedia sejak awal beroperasi.
 
 ### Langkah Pengerjaan
 
@@ -348,20 +314,18 @@ Perintah pengalihan `>` sengaja ditempatkan **di dalam file script**, bukan lang
 |---|---|
 | alpha → molly (subnet 1 ke 5) | berhasil, ttl 63 |
 | alpha → abbey (subnet 1 ke 3) | berhasil, ttl 63 |
-| molly → alpha | berhasil, arah sebaliknya |
-| `cat /etc/resolv.conf` | resolver terpasang otomatis |
+| molly → alpha | arah sebaliknya |
+| `cat /etc/resolv.conf` | resolver terpasang |
 
-Nilai **ttl 63** menunjukkan paket melewati tepat satu router, sesuai rancangan.
+Nilai **ttl 63** menunjukkan paket melewati satu router.
 
 ---
 
 ## Soal 4: Zona DNS Master dan Slave
 
-> Penjaga Direktori mulai menuliskan hukum The Mesh. Pada node prab, bangun zona `K68.com` sebagai authoritative dengan SOA yang menunjuk ke `prab.K68.com`, serta tambahkan catatan NS untuk `prab.K68.com` dan `tedd.K68.com`. Buat A record untuk keduanya yang mengarah ke alamat IP mereka masing-masing, serta A record apex `K68.com` yang mengarah ke gerbang aplikasi dinamis (penny). Aktifkan fitur notify dan allow-transfer ke tedd, lalu set forwarders ke 192.168.122.1. Di node tedd, tarik zona dari master dan pastikan server menjawab secara authoritative. Setelah itu, perbarui urutan resolver pada seluruh Entitas non-router menjadi: IP prab, IP tedd, lalu 192.168.122.1.
-
 ### Langkah Pengerjaan
 
-**1. Menulis seluruh konfigurasi BIND sebagai script di `/root/setup-dns.sh`,** bukan mengetik langsung ke `/etc/bind`. Direktori `/etc/bind` hilang setiap node restart, sehingga konfigurasi harus dapat dibangun ulang dari `/root`.
+**1. Menulis seluruh konfigurasi BIND sebagai script di `/root/setup-dns.sh`.
 
 **2. Menjalankan script di prab, lalu memverifikasi dengan `named-checkconf` dan `named-checkzone`.**
 
@@ -425,7 +389,7 @@ service bind9 restart
 
 ![Config prab](screenshot/soal04-config-prab.png)
 
-`notify yes` membuat master mengabari slave setiap zona berubah, `also-notify` menyebut alamat slave secara eksplisit, dan `allow-transfer` memberi izin slave menarik salinan zona. Ketiganya harus ada - tanpa `allow-transfer`, notify tetap terkirim tetapi transfer akan ditolak.
+`notify yes` membuat master mengabari slave setiap zona berubah, `also-notify` menyebut alamat slave, dan `allow-transfer` memberi izin slave menarik salinan zona. tanpa `allow-transfer`, notify tetap terkirim tetapi transfer akan ditolak.
 
 `forwarders` mengarahkan pertanyaan di luar zona `K68.com` ke DNS milik NAT, sehingga node tetap dapat membuka alamat internet meski resolver-nya sudah diarahkan ke prab.
 
@@ -467,7 +431,7 @@ service bind9 restart
 
 ![Config tedd](screenshot/soal04-config-tedd.png)
 
-Baris `chown -R bind:bind /etc/bind/jarkom` bersifat wajib pada slave. File hasil zone transfer ditulis oleh proses `named` yang berjalan sebagai user `bind`; tanpa kepemilikan yang benar, transfer akan gagal dan zona tidak pernah termuat.
+Baris `chown -R bind:bind /etc/bind/jarkom` bersifat wajib pada slave. File hasil zone transfer ditulis oleh proses `named` yang berjalan sebagai user `bind`; tanpa kepemilikan yang benar, transfer akan gagal.
 
 **13 node non-router** - `/root/dns.sh` diperbarui, resolver diurutkan ulang:
 
@@ -495,8 +459,6 @@ Flag **`aa`** (authoritative answer) pada jawaban kedua server menandakan keduan
 ---
 
 ## Soal 5: Hostname dan Domain per Node
-
-> "Entitas tanpa identitas adalah anomali," pesan Rootkit. Namai semua Entitas (hostname) sesuai glosarium dan verifikasi bahwa setiap host mengenali hostname tersebut secara system-wide. Buat setiap domain untuk masing-masing node sesuai dengan namanya dan assign IP masing-masing juga. Lakukan pengecualian untuk node yang bertanggung jawab atas prab dan tedd.
 
 ### Langkah Pengerjaan
 
@@ -528,7 +490,7 @@ fi
 cat /root/hosts.tmp > /etc/hosts
 ```
 
-Script dibuat generik - membaca hostname dan alamat node sendiri - sehingga isinya identik di ketiga belas node dan tidak perlu disesuaikan satu per satu.
+Script dibuat generik yang membaca hostname dan alamat node sendiri. sehingga isinya identik di ketiga belas node dan tidak perlu disesuaikan satu per satu.
 
 **Catatan penting mengenai pengambilan alamat IP.** Versi pertama script ini memakai `hostname -I`. Perintah tersebut berhasil ketika script dijalankan manual dari konsol, sehingga pengujian soal 5 lolos. Namun ketika script dipanggil oleh hook `up` saat node melakukan boot, `PATH` yang berlaku minimal dan `hostname` menunjuk ke **BusyBox**, yang tidak mendukung flag `-I`. Akibatnya variabel `IP` kosong dan baris yang ditulis ke `/etc/hosts` menjadi cacat (` nama.K68.com nama` tanpa alamat), sehingga `hostname -f` gagal setiap kali node dinyalakan ulang.
 
@@ -593,8 +555,6 @@ Urutan diagnosa yang benar untuk kasus DNS mati: periksa status service di **mas
 
 ## Soal 6: Verifikasi Zone Transfer
 
-> Pastikan zone transfer berjalan, pastikan tedd telah menerima salinan zona terbaru dari prab. Nilai serial SOA di keduanya harus sama karena keduanya tidak bisa dipisahkan dan saling melengkapi.
-
 ### Langkah Pengerjaan
 
 Soal ini **tidak memerlukan script atau konfigurasi baru**. Seluruh mekanismenya sudah dipasang pada soal 4:
@@ -630,8 +590,6 @@ Log transfer tidak dapat dilampirkan karena container DebiNet tidak menjalankan 
 ---
 
 ## Soal 7: Record vault, core, dan CNAME
-
-> Tambahkan pada zona `K68.com` A record untuk `vault.K68.com` (IP obladi & desmond), dan `core.K68.com` (IP oblada & molly). Tetapkan CNAME `www.K68.com` → `penny.K68.com` dan `static.K68.com` → `abbey.K68.com`. Verifikasi dari dua klien berbeda bahwa seluruh hostname tersebut ter-resolve ke tujuan yang benar dan konsisten.
 
 ### Langkah Pengerjaan
 
@@ -680,18 +638,6 @@ Urutan kedua alamat pada `vault` berbeda antara alpha dan delta. Ini bukan ketid
 ---
 
 ## Soal 8: Reverse Zone dan PTR
-
-> Di prab (ns1) deklarasikan reverse zone untuk segmen jaringan tempat abbey, penny, area vault, dan area core berada. Di tedd (ns2) tarik reverse zone tersebut sebagai slave, isi PTR untuk keempat hostname itu agar pencarian balik IP address mengembalikan hostname yang benar, lalu pastikan query reverse untuk alamat abbey, penny, area vault, dan area core dijawab authoritative.
-
-### Pertimbangan Sebelum Pengerjaan
-
-Soal menyebut "segmen" dalam bentuk tunggal, sementara keempat entitas tersebar di tiga subnet berbeda: abbey di `192.245.3.0/24`, penny di `192.245.4.0/24`, serta area vault dan core di `192.245.5.0/24`.
-
-Diputuskan membuat **tiga reverse zone**, satu untuk setiap /24. Dasarnya, modul DNS mengajarkan pola reverse berbasis tiga byte pertama alamat, dan tiga zona memastikan seluruh alamat yang diminta tercakup.
-
-Alternatif berupa satu zona pada level `245.192.in-addr.arpa` - mencakup seluruh `/16` sekaligus - secara teknis sah dan lebih literal terhadap kata "segmen" tunggal, namun menyimpang dari pola yang diajarkan modul sehingga tidak dipilih.
-
-Record PTR diarahkan ke **nama node**, bukan ke `vault.K68.com` atau `core.K68.com`. Glosarium mendefinisikan area vault sebagai kelompok node obladi dan desmond, sehingga "PTR untuk area vault" berarti PTR bagi kedua node tersebut. Ini juga sesuai konvensi DNS: PTR menunjuk ke nama kanonik sebuah host, bukan ke nama bersama yang memiliki banyak A record.
 
 ### Script dan Konfigurasi
 
@@ -832,10 +778,6 @@ Script lengkap kedua node ada di [`config/prab/setup-dns.sh`](config/prab/setup-
 
 ## Soal 9: Web Statis dan Autoindex
 
-> Jalankan layanan web statis pada hostname di node area vault (menggunakan apache). Buka folder direktori `/arsip/` dan aktifkan fitur autoindex (directory listing) pada konfigurasi Apache sehingga seluruh daftar file di dalamnya dapat ditelusuri langsung dari browser. Akses pengujian harus dilakukan melalui hostname, bukan IP address.
-
-> **Koreksi soal.** Naskah soal menyebut "aktifkan fitur autoindex pada konfigurasi Nginx". Asisten (rootkids) mengoreksi hal ini di Discord: *"sorry pake apache yaa, belom diganti hehe"*. Pengerjaan menggunakan **Apache**.
-
 ### Langkah Pengerjaan
 
 **1. Menulis `/root/setup-web.sh` yang generik,** membaca hostname node sendiri sehingga perintah yang dijalankan di obladi dan desmond identik.
@@ -914,7 +856,7 @@ Penelusuran dari browser menggunakan `lynx`:
 
 ![Lynx desmond](screenshot/soal09-lynx-arsip-desmond.png)
 
-Daftar berkas tampil sebagai tautan yang dapat dibuka, dan footer Apache menunjukkan server yang melayani adalah `obladi.k68.com` dan `desmond.k68.com` - bukan alamat IP.
+Daftar berkas tampil sebagai tautan yang dapat dibuka, dan footer Apache menunjukkan server yang melayani adalah `obladi.k68.com` dan `desmond.k68.com`.
 
 ---
 ## Soal 10: Web Dinamis dan Rewrite URL
