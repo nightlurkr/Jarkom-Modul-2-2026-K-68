@@ -959,6 +959,16 @@ service nginx restart
 ![Soal 10](screenshot/Soal%2010%20Bukti%20Oblada.png)
 ![Soal 10](screenshot/Soal%2010%20Bukti%20Molly.png)
 
+Sebagai pembanding, pengujian juga dilakukan dengan `lynx` dari alpha untuk membuktikan URL bersih (tanpa `.php`) tetap ter-render penuh di sisi klien:
+
+![Soal 10 alpha lynx](screenshot/soal10-alpha-lynx.png)
+
+![Soal 10 molly lynx](screenshot/soal10-molly-lynx.png)
+
+![Soal 10 oblada core lynx](screenshot/soal10-oblada-core-lynx.png)
+
+![Soal 10 oblada profil lynx](screenshot/soal10-oblada-profil-lynx.png)
+
 ---
 
 ## Soal 11: Reverse Proxy dan Load Balancer
@@ -1050,6 +1060,8 @@ service nginx restart
 
 ![Soal 11 Abbey](screenshot/Soal%2011%20Abbey.png)
 
+![Soal 11 alpha lynx](screenshot/soal11-alpha-lynx.png)
+
 ---
 
 ## Soal 12: Basic Authentication
@@ -1089,6 +1101,10 @@ Dengan ini, siapapun yang mencoba mengakses `http://penny.K68.com/admin` atau le
 
 ![Soal 12 Failed](screenshot/Soal%2012%20Failed.png)
 ![Soal 12 Success](screenshot/Soal%2012%20Success.png)
+
+Pengujian dengan `lynx` dari alpha, dengan dan tanpa kredensial:
+
+![Soal 12 alpha lynx](screenshot/soal12-alpha-lynx.png)
 
 ---
 
@@ -1214,6 +1230,10 @@ Meskipun Penny dan Abbey berfungsi sebagai *reverse proxy* secara global, mereka
 ![Soal 15 Penny](screenshot/Soal%2015%20Penny.png)
 
 ![Soal 15 Abbey](screenshot/Soal%2015%20Abbey.png)
+
+Pengujian dengan `lynx` dari alpha:
+
+![Soal 15 alpha lynx](screenshot/soal15-alpha-lynx.png)
 
 ---
 
